@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDarkMode } from './_redux/theme-slice';
-import { Link } from '@inertiajs/react';
 import {
     Bars3Icon,
     XMarkIcon,

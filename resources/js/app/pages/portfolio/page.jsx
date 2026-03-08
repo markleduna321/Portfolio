@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Head } from '@inertiajs/react';
 import { useDispatch } from 'react-redux';
 import PortfolioLayout from './layout';
 import HeroSection from './_sections/hero-section';
@@ -10,18 +9,17 @@ import GitHubSection from './_sections/github-section';
 import ContactSection from './_sections/contact-section';
 import { getPortfolioDataThunk } from './_redux/portfolio-thunk';
 
-export default function PortfolioPage({ portfolioData }) {
+export default function PortfolioPage() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        document.title = 'Developer Portfolio';
         // If you want to fetch data from API instead of props
         // dispatch(getPortfolioDataThunk());
     }, []);
 
     return (
-        <>
-            <Head title="Developer Portfolio" />
-            <PortfolioLayout>
+        <PortfolioLayout>
                 <HeroSection />
                 <ProjectsSection />
                 <SkillsSection />
@@ -29,6 +27,5 @@ export default function PortfolioPage({ portfolioData }) {
                 <GitHubSection />
                 <ContactSection />
             </PortfolioLayout>
-        </>
     );
 }
