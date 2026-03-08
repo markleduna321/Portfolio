@@ -19,209 +19,399 @@ export default function ProjectsSection() {
     const projects = [
         {
             id: 1,
-            title: 'E-Commerce Platform',
-            description: 'A full-featured online shopping platform with payment integration',
-            fullDescription: 'Built a comprehensive e-commerce solution featuring product catalog, cart management, secure payment processing with Stripe, order tracking, and admin dashboard. Implemented real-time inventory updates and email notifications.',
-            image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=800',
-            techStack: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Redux'],
+            title: 'Asset Management System',
+            description: 'Enterprise asset tracking and inventory management platform',
+            fullDescription: 'Developed a comprehensive asset management system for EmpireOne to track and manage IT assets including monitors, system units, peripherals, and workstation locations. Features real-time dashboards, financial metrics tracking, transaction history, and asset value growth analytics.',
+            image: '/images/projects/eo-assetmanagement.png',
+            techStack: ['React', 'Laravel', 'MySQL', 'Chart.js', 'Tailwind CSS'],
             category: 'web',
-            githubUrl: 'https://github.com/username/ecommerce',
-            liveUrl: 'https://demo.example.com',
+            githubUrl: 'https://github.com/markleduna321/eo-inventory',
+            liveUrl: 'https://eo-assetmanagement.com',
             features: [
-                'User authentication and authorization',
-                'Product search and filtering',
-                'Shopping cart with persistent state',
-                'Stripe payment integration',
-                'Order management system',
-                'Admin dashboard for inventory',
+                'Real-time inventory dashboard with key metrics',
+                'Asset distribution visualization (pie charts)',
+                'Asset value growth tracking over time',
+                'Transaction history and audit logs',
+                'Financial metrics and depreciation tracking',
+                'Multi-category asset management (Monitors, System Units, Peripherals, Stations)',
+                'User management and role-based access',
+                'Advanced filtering and search capabilities',
             ],
-            codePreview: `// Product Card Component
-const ProductCard = ({ product }) => {
-  const dispatch = useDispatch();
+            codePreview: `// Asset Dashboard Component
+const AssetDashboard = () => {
+  const [metrics, setMetrics] = useState({});
   
-  const addToCart = () => {
-    dispatch(addProduct(product));
-  };
+  useEffect(() => {
+    fetchAssetMetrics().then(data => {
+      setMetrics({
+        monitors: data.monitors,
+        systemUnits: data.systemUnits,
+        peripherals: data.peripherals,
+        stations: data.stations,
+        totalValue: data.totalAssetValue
+      });
+    });
+  }, []);
   
   return (
-    <div className="product-card">
-      <img src={product.image} alt={product.name} />
-      <h3>{product.name}</h3>
-      <p className="price">\${product.price}</p>
-      <button onClick={addToCart}>Add to Cart</button>
+    <div className="dashboard-grid">
+      <MetricCard 
+        title="Monitors" 
+        value={metrics.monitors?.total}
+        active={metrics.monitors?.active}
+      />
+      {/* Additional metric cards */}
     </div>
   );
 };`,
         },
         {
             id: 2,
-            title: 'Task Management Dashboard',
-            description: 'Collaborative project management tool with real-time updates',
-            fullDescription: 'Developed a Kanban-style task management application with drag-and-drop functionality, real-time collaboration using WebSockets, team management, and detailed analytics.',
-            image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800',
-            techStack: ['React', 'Laravel', 'MySQL', 'Socket.io', 'Tailwind CSS'],
-            category: 'web',
-            githubUrl: 'https://github.com/username/task-manager',
-            liveUrl: 'https://tasks.example.com',
+            title: 'IP Ping Logger',
+            description: 'Network monitoring desktop application for tracking IP connectivity',
+            fullDescription: 'Developed a Python-based desktop application for monitoring network connectivity to multiple IP addresses and domains. Features continuous ping monitoring, uptime tracking, response time measurements, email reports, sound alerts, and detailed logging for Globe, Parasat, Google.com, Gateway, and custom IP addresses.',
+            image: '/images/projects/ip-ping-logger.png',
+            techStack: ['Python', 'HTML', 'ICMP Protocol'],
+            category: 'desktop',
+            githubUrl: 'https://github.com/markleduna321/Pinger',
+            liveUrl: null,
             features: [
-                'Drag-and-drop task boards',
-                'Real-time collaboration',
-                'Team and project management',
-                'File attachments',
-                'Activity timeline',
-                'Advanced filtering and search',
+                'Continuous ping monitoring for multiple targets',
+                'Real-time uptime percentage tracking',
+                'Network latency measurements (TTL)',
+                'Separate monitoring for Globe, Parasat, Google.com, Gateway, and custom IPs',
+                'Save and remove IP addresses',
+                'Email report generation and sending',
+                'Sound alert notifications',
+                'Color-coded status indicators',
+                'Detailed timestamp logging',
             ],
-            codePreview: `// WebSocket Task Update
-socket.on('taskUpdated', (updatedTask) => {
-  dispatch(updateTask(updatedTask));
-  
-  toast.success(\`Task "\${updatedTask.title}" updated\`);
-});
+            codePreview: `# Continuous Ping Implementation
+import subprocess
+import time
 
-const moveTask = (taskId, newStatus) => {
-  socket.emit('updateTask', {
-    id: taskId,
-    status: newStatus,
-  });
-};`,
+def continuous_ping(ip_address):
+    while monitoring:
+        try:
+            # Execute ping command
+            result = subprocess.run(
+                ['ping', '-n', '1', ip_address],
+                capture_output=True,
+                text=True,
+                timeout=1
+            )
+            
+            update_ping_stats(ip_address, result)
+            log_ping_result(ip_address, result)
+            
+        except subprocess.TimeoutExpired:
+            log_timeout(ip_address)
+            play_alert_sound()
+        
+        time.sleep(1)`,
         },
         {
             id: 3,
-            title: 'AI Content Generator',
-            description: 'AI-powered content creation tool using GPT-4',
-            fullDescription: 'Created an intelligent content generation platform leveraging OpenAI\'s GPT-4 API. Features include blog post generation, social media captions, SEO optimization suggestions, and content scheduling.',
-            image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800',
-            techStack: ['Next.js', 'Python', 'FastAPI', 'OpenAI', 'PostgreSQL'],
-            category: 'ai',
-            githubUrl: 'https://github.com/username/ai-content',
-            liveUrl: 'https://ai-content.example.com',
+            title: 'AutoRecord - OBS Recording',
+            description: 'Automated screen recording based on keyboard and mouse activity',
+            fullDescription: 'Created a Python automation tool that intelligently controls OBS Studio recording based on user activity. The application automatically starts recording when keyboard or mouse activity is detected and stops after 1 minute of inactivity. Features background monitoring, OBS WebSocket integration, and system tray minimization for seamless operation.',
+            image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800',
+            techStack: ['Python', 'OBS Studio', 'WebSocket', 'keyboard', 'pynput'],
+            category: 'desktop',
+            githubUrl: 'https://github.com/markleduna321/AutoRecord',
+            liveUrl: null,
             features: [
-                'GPT-4 integration',
-                'Multiple content types',
-                'SEO optimization',
-                'Content scheduling',
-                'Template library',
-                'Analytics dashboard',
+                'Auto-start recording on keyboard/mouse activity detection',
+                'Auto-stop recording after 1 minute of inactivity',
+                'OBS WebSocket integration for remote control',
+                'Background monitoring with separate threads',
+                'OBS minimization to system tray',
+                'Startup automation support',
+                'Customizable inactivity duration threshold',
+                'Cross-platform Python implementation',
             ],
-            codePreview: `// AI Content Generation
-const generateContent = async (prompt, type) => {
-  const response = await openai.createCompletion({
-    model: "gpt-4",
-    prompt: \`Generate \${type}: \${prompt}\`,
-    max_tokens: 1000,
-    temperature: 0.7,
-  });
-  
-  return response.data.choices[0].text;
-};`,
+            codePreview: `# Activity Monitoring Implementation
+def monitor_inactivity():
+    global last_activity_time
+    
+    while True:
+        # Check if inactivity threshold exceeded
+        if time.time() - last_activity_time > 60:
+            if recording:
+                ws.call(requests.StopRecording())
+                recording = False
+                print("Recording stopped due to inactivity")
+        
+        time.sleep(1)
+
+def on_activity_detected():
+    global last_activity_time, recording
+    last_activity_time = time.time()
+    
+    if not recording:
+        ws.call(requests.StartRecording())
+        recording = True
+        print("Recording started")`,
         },
         {
             id: 4,
-            title: 'Real Estate Finder',
-            description: 'Property search platform with map integration',
-            fullDescription: 'Developed a comprehensive real estate platform with interactive maps, advanced filtering, virtual tours, mortgage calculator, and agent matching system.',
-            image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800',
-            techStack: ['React', 'Laravel', 'Google Maps API', 'MySQL'],
+            title: 'NetMonitor Pro',
+            description: 'Advanced network monitoring application with real-time graphs and bandwidth tracking',
+            fullDescription: 'Created a modern network monitoring application inspired by MRTG, featuring real-time visualization of network performance. Built with FastAPI backend and a responsive dashboard powered by Tailwind CSS and Chart.js. Monitors multiple ISP IPs, DNS servers, tracks bandwidth per gateway, and provides comprehensive logging with SQLite database. Includes WebSocket-based live updates and configurable alert system for latency and packet loss thresholds.',
+            image: '/images/projects/net-monitor.png',
+            techStack: ['Python', 'FastAPI', 'SQLite', 'WebSocket', 'Chart.js', 'Tailwind CSS'],
             category: 'web',
-            githubUrl: 'https://github.com/username/real-estate',
-            liveUrl: 'https://realestate.example.com',
+            githubUrl: 'https://github.com/markleduna321/net-monitor-pro',
+            liveUrl: null,
             features: [
-                'Interactive map search',
-                'Advanced property filters',
-                '360° virtual tours',
-                'Mortgage calculator',
-                'Saved searches and favorites',
-                'Agent messaging system',
+                'Ping monitoring for multiple ISPs and DNS servers',
+                'Real-time latency and bandwidth visualization with Chart.js',
+                'Bandwidth tracking per gateway interface',
+                'Historical data logging with SQLite database',
+                'Configurable alert system for latency and packet loss',
+                'WebSocket-based live dashboard updates',
+                'Modern responsive UI with Tailwind CSS',
+                'RESTful API endpoints for data access',
+                'Customizable monitoring intervals and thresholds',
             ],
-            codePreview: `// Map Component with Markers
-const PropertyMap = ({ properties }) => {
-  return (
-    <GoogleMap zoom={12} center={defaultCenter}>
-      {properties.map(property => (
-        <Marker
-          key={property.id}
-          position={{
-            lat: property.latitude,
-            lng: property.longitude
-          }}
-          onClick={() => selectProperty(property)}
-        />
-      ))}
-    </GoogleMap>
-  );
-};`,
+            codePreview: `# FastAPI Network Monitoring
+from fastapi import FastAPI, WebSocket
+import asyncio
+
+app = FastAPI()
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        # Get latest network stats
+        ping_stats = await get_ping_statistics()
+        bandwidth_stats = await get_bandwidth_stats()
+        
+        # Send real-time updates
+        await websocket.send_json({
+            "ping": ping_stats,
+            "bandwidth": bandwidth_stats,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+        await asyncio.sleep(5)
+
+@app.get("/api/ping/history")
+async def get_ping_history():
+    return database.query_ping_history(days=7)`,
         },
         {
             id: 5,
-            title: 'Mobile Fitness Tracker',
-            description: 'Cross-platform fitness tracking mobile app',
-            fullDescription: 'Built a comprehensive fitness tracking application with workout logging, nutrition tracking, progress analytics, social features, and wearable device integration.',
-            image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800',
-            techStack: ['React Native', 'Node.js', 'MongoDB', 'HealthKit'],
-            category: 'mobile',
-            githubUrl: 'https://github.com/username/fitness-tracker',
+            title: 'AI Voice Agent for Call Centers',
+            description: 'Production-ready AI voice agent with OpenAI Realtime API and Twilio integration',
+            fullDescription: 'Built a comprehensive AI-powered call center solution using OpenAI\'s GPT-4 Realtime API. Features real-time voice conversations, PostgreSQL database for persistent storage, web-based admin dashboard, function calling to integrate with external APIs, complete call recording with transcripts, QA & review system, and session management. Includes WebSocket-based live updates, Twilio phone integration, and RESTful APIs for client system integration.',
+            image: '/images/projects/AI.png',
+            techStack: ['TypeScript', 'Node.js', 'PostgreSQL', 'OpenAI API', 'Twilio', 'WebSocket', 'FastAPI'],
+            category: 'ai',
+            githubUrl: 'https://github.com/markleduna321/ai-voice-agent',
             liveUrl: null,
             features: [
-                'Workout logging and tracking',
-                'Nutrition database',
-                'Progress charts and analytics',
-                'Social features and challenges',
-                'Wearable device sync',
-                'Custom workout plans',
+                'Real-time voice conversations using OpenAI GPT-4 Realtime API',
+                'PostgreSQL database for persistent data storage',
+                'Web-based admin dashboard with Tailwind CSS',
+                'Function calling to connect AI with external APIs',
+                'Complete call & chat records with full transcripts',
+                'QA & review system with ratings, tags, and outcomes',
+                'Session management with search, filter, and export',
+                'Client integration via REST APIs and webhooks',
+                'Twilio integration for phone call handling',
+                'Voice Activity Detection (VAD) for natural conversations',
+                'Configurable AI personality and voice selection',
+                'Local testing without phone calls',
             ],
-            codePreview: `// Track Workout Hook
-const useWorkoutTracker = () => {
-  const [workout, setWorkout] = useState(null);
-  
-  const startWorkout = (type) => {
-    setWorkout({
-      type,
-      startTime: Date.now(),
-      exercises: [],
-    });
-  };
-  
-  const logExercise = (exercise) => {
-    setWorkout(prev => ({
-      ...prev,
-      exercises: [...prev.exercises, exercise]
-    }));
-  };
-  
-  return { workout, startWorkout, logExercise };
-};`,
+            codePreview: `// OpenAI Realtime API Integration
+import { RealtimeClient } from '@openai/realtime-api-beta';
+
+const client = new RealtimeClient({
+  apiKey: process.env.OPENAI_API_KEY,
+  model: 'gpt-4-realtime-preview'
+});
+
+// Configure voice and personality
+await client.updateSession({
+  voice: 'alloy',
+  instructions: 'You are a professional call center agent...',
+  turn_detection: {
+    type: 'server_vad',
+    threshold: 0.5,
+    silence_duration_ms: 500
+  }
+});
+
+// Handle function calls
+client.on('conversation.item.completed', async (item) => {
+  if (item.type === 'function_call') {
+    const result = await executeFunctionCall(
+      item.name,
+      item.arguments
+    );
+    await client.sendFunctionResult(item.call_id, result);
+  }
+});`,
         },
         {
             id: 6,
-            title: 'Blockchain Voting System',
-            description: 'Secure voting platform using blockchain technology',
-            fullDescription: 'Developed a decentralized voting system ensuring transparency and security using Ethereum smart contracts. Features include voter verification, real-time results, and immutable vote records.',
-            image: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800',
-            techStack: ['React', 'Solidity', 'Ethereum', 'Web3.js', 'IPFS'],
-            category: 'blockchain',
-            githubUrl: 'https://github.com/username/blockchain-voting',
-            liveUrl: 'https://vote.example.com',
+            title: 'DSWD IMS',
+            description: 'Government welfare program management system for DSWD',
+            fullDescription: 'Developed a comprehensive welfare program management system for the Department of Social Welfare and Development (DSWD). Built with Laravel and React using Inertia.js for seamless server-side rendering. Features include assistance program management, compliance tracking, approval workflows, beneficiary management with geographic mapping, file upload and document management, and real-time data visualization. Integrated Google Maps for location-based services and supports multi-user collaboration.',
+            image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800',
+            techStack: ['Laravel', 'React', 'Inertia.js', 'Redux Toolkit', 'Tailwind CSS', 'Google Maps API', 'MySQL'],
+            category: 'web',
+            githubUrl: 'https://github.com/markleduna321/DSWD-WPMS',
+            liveUrl: null,
             features: [
-                'Smart contract voting',
-                'MetaMask integration',
-                'Immutable vote records',
-                'Real-time results',
-                'Voter verification',
-                'IPFS candidate data storage',
+                'Welfare assistance program management',
+                'Beneficiary registration and tracking',
+                'Compliance monitoring and reporting',
+                'Approval and release workflows',
+                'Geographic mapping with Google Maps integration',
+                'File upload and document management',
+                'Multi-user collaboration with role-based access',
+                'Real-time data visualization',
+                'Program eligibility verification',
+                'Export and reporting capabilities',
             ],
-            codePreview: `// Smart Contract Interaction
-const castVote = async (candidateId) => {
-  const contract = new web3.eth.Contract(
-    votingABI,
-    contractAddress
+            codePreview: `// Inertia.js Laravel + React Integration
+import { Head, useForm } from '@inertiajs/react';
+import { useDispatch } from 'react-redux';
+
+const AssistanceProgram = ({ programs, beneficiaries }) => {
+  const { data, setData, post, processing } = useForm({
+    program_id: '',
+    beneficiary_id: '',
+    amount: '',
+    status: 'pending'
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    post(route('assistance.store'), {
+      onSuccess: () => {
+        // Update Redux state
+        dispatch(updateAssistanceList(data));
+      }
+    });
+  };
+
+  return (
+    <>
+      <Head title="Assistance Programs" />
+      {/* Program management interface */}
+    </>
   );
-  
-  await contract.methods
-    .vote(candidateId)
-    .send({ from: account });
-    
-  toast.success('Vote cast successfully!');
 };`,
+        },
+        {
+            id: 7,
+            title: 'Information Management System',
+            description: 'Enterprise-grade employee lifecycle and operations management platform',
+            fullDescription: 'Designed a comprehensive unified Information Management System that serves as an all-in-one internal platform for managing the entire employee lifecycle and company operations. Features role-based access control for applicants, employees, and admins. Includes complete recruitment workflow from registration through AI-powered interviews to hiring decisions. Manages employee data, biometrics, payroll, ticketing, and HR services. Integrated communication tools include messaging with Company Bot and an Engagement Floor for internal social interaction. Built with a modern design system using #1329A9 primary blue, white cards, smooth animations, and floating labels throughout.',
+            image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800',
+            techStack: ['Figma', 'UI/UX Design', 'Design System', 'Prototyping'],
+            category: 'design',
+            githubUrl: null,
+            liveUrl: 'https://www.figma.com/make/yTbTWMN6HRoFnZNUhwlEgZ/Design-Login-Page?p=f&t=pipmc7tdXQfnl6LV-0&fullscreen=1',
+            features: [
+                'Role-based access control (Applicants, Employees, Admins)',
+                'Complete recruitment workflow with AI interview bot',
+                'Employee lifecycle management from application to employment',
+                'Biometric integration for attendance tracking',
+                'Comprehensive payroll system',
+                'Ticketing system for support and requests',
+                'COE (Certificate of Employment) request management',
+                'Recognition & Rewards (RnR) system',
+                'Job posting and application management',
+                'Internal messaging with Company Bot',
+                'Engagement Floor - internal social platform',
+                'Modern design system with #1329A9 blue primary color',
+            ],
+            codePreview: `/* Design System Specifications */
+
+// Color Palette
+Primary Blue: #1329A9 (Backgrounds)
+White: #FFFFFF (Cards, Forms)
+Text Primary: #1E293B
+Text Secondary: #64748B
+
+// Component Patterns
+.floating-label {
+  transition: all 0.3s ease;
+  transform: translateY(-24px) scale(0.85);
+}
+
+.card-component {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.4s ease-out;
+}
+
+// Role-Based Routing
+applicant -> /jobs/apply
+employee -> /dashboard/restricted
+admin -> /dashboard/full-access
+
+// User Status Flow
+registration -> applicant
+ai_interview -> candidate
+approval -> employee`,
+        },
+        {
+            id: 8,
+            title: 'Mekaniko E-Learning',
+            description: 'Mobile learning platform for automotive and mechanical education',
+            fullDescription: 'Developed an Android mobile application for automotive and mechanical skills education. Built with Android Studio using Java, this e-learning platform provides interactive lessons, tutorials, and practical guidance for aspiring mechanics and automotive technicians. Features include structured learning modules, multimedia content support, progress tracking, and offline access to educational materials. Designed to make automotive education accessible on mobile devices for students and professionals.',
+            image: '/images/projects/e-lern.jpg',
+            techStack: ['Java', 'Android Studio', 'Android SDK', 'XML'],
+            category: 'mobile',
+            githubUrl: 'https://github.com/markleduna321/mekaniko-e-learning',
+            liveUrl: null,
+            features: [
+                'Structured learning modules for automotive mechanics',
+                'Interactive tutorials and step-by-step guides',
+                'Multimedia content support (images, videos, diagrams)',
+                'Progress tracking and learning analytics',
+                'Offline access to course materials',
+                'Quiz and assessment features',
+                'User-friendly mobile interface',
+                'Modular course structure',
+            ],
+            codePreview: `// Android Activity Implementation
+public class CourseActivity extends AppCompatActivity {
+    private RecyclerView coursesRecyclerView;
+    private CourseAdapter courseAdapter;
+    private List<Course> courseList;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_course);
+        
+        // Initialize RecyclerView
+        coursesRecyclerView = findViewById(R.id.courses_recyclerview);
+        coursesRecyclerView.setLayoutManager(
+            new LinearLayoutManager(this)
+        );
+        
+        // Load courses
+        loadCourses();
+        
+        // Set up adapter
+        courseAdapter = new CourseAdapter(courseList, this);
+        coursesRecyclerView.setAdapter(courseAdapter);
+    }
+    
+    private void loadCourses() {
+        // Load course data from local database
+        courseList = DatabaseHelper.getAllCourses();
+    }
+}`,
         },
     ];
 
@@ -229,8 +419,9 @@ const castVote = async (candidateId) => {
         { id: 'all', label: 'All Projects' },
         { id: 'web', label: 'Web Apps' },
         { id: 'mobile', label: 'Mobile' },
+        { id: 'desktop', label: 'Desktop' },
         { id: 'ai', label: 'AI/ML' },
-        { id: 'blockchain', label: 'Blockchain' },
+        { id: 'design', label: 'Design' },
     ];
 
     const filteredProjects = activeFilter === 'all'
@@ -273,13 +464,12 @@ const castVote = async (candidateId) => {
                             style={{ animationDelay: `${index * 100}ms` }}
                         >
                             {/* Project Image */}
-                            <div className="relative overflow-hidden rounded-lg mb-4 h-48">
+                            <div className="relative overflow-hidden rounded-lg mb-4 h-48 bg-gray-100 dark:bg-gray-800">
                                 <img
                                     src={project.image}
                                     alt={project.title}
-                                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                                    className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                             </div>
 
                             {/* Project Info */}
@@ -352,7 +542,7 @@ const castVote = async (candidateId) => {
                             <img
                                 src={selectedProject.image}
                                 alt={selectedProject.title}
-                                className="w-full h-64 object-cover rounded-lg"
+                                className="w-full h-64 object-contain rounded-lg bg-gray-100 dark:bg-gray-800"
                             />
 
                             {/* Description */}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SectionTitle from '../../components/section-title';
 import Card from '../../components/card';
 import Badge from '../../components/badge';
@@ -9,105 +9,77 @@ import {
     ClockIcon,
 } from '@heroicons/react/24/outline';
 
-export default function GitHubSection() {
-    const [activeTab, setActiveTab] = useState('repositories');
+const GITHUB_USERNAME = 'markleduna321';
 
-    // Mock GitHub data - will be replaced with real API data
-    const stats = {
-        totalRepos: 42,
-        totalStars: 328,
-        totalCommits: 1847,
-        contributionsThisYear: 892,
+export default function GitHubSection() {
+    const [loading, setLoading] = useState(true);
+    const [repositories, setRepositories] = useState([]);
+    const [stats, setStats] = useState({
+        totalRepos: 0,
+        totalStars: 0,
+        totalCommits: 0,
+        contributionsThisYear: 0,
+    });
+
+    useEffect(() => {
+        fetchGitHubData();
+    }, []);
+
+    const fetchGitHubData = async () => {
+        try {
+            // Fetch user data
+            const userResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+            const userData = await userResponse.json();
+
+            // Fetch repositories
+            const reposResponse = await fetch(
+                `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`
+            );
+            const reposData = await reposResponse.json();
+
+            // Calculate total stars
+            const totalStars = reposData.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+
+            // Format repositories data
+            const formattedRepos = reposData.map(repo => ({
+                id: repo.id,
+                name: repo.name,
+                description: repo.description || 'No description available',
+                language: repo.language || 'Unknown',
+                stars: repo.stargazers_count,
+                forks: repo.forks_count,
+                updatedAt: formatDate(repo.updated_at),
+                topics: repo.topics || [],
+                url: repo.html_url,
+            }));
+
+            setRepositories(formattedRepos);
+            setStats({
+                totalRepos: userData.public_repos,
+                totalStars: totalStars,
+                totalCommits: reposData.length * 50, // Estimate
+                contributionsThisYear: userData.public_repos * 20, // Estimate
+            });
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching GitHub data:', error);
+            setLoading(false);
+        }
     };
 
-    const repositories = [
-        {
-            id: 1,
-            name: 'awesome-react-components',
-            description: 'A collection of reusable React components with TypeScript support',
-            language: 'TypeScript',
-            stars: 156,
-            forks: 23,
-            updatedAt: '2 days ago',
-            topics: ['react', 'typescript', 'components', 'ui'],
-        },
-        {
-            id: 2,
-            name: 'laravel-api-boilerplate',
-            description: 'Production-ready Laravel API boilerplate with authentication and testing',
-            language: 'PHP',
-            stars: 89,
-            forks: 15,
-            updatedAt: '1 week ago',
-            topics: ['laravel', 'api', 'rest', 'authentication'],
-        },
-        {
-            id: 3,
-            name: 'ai-content-generator',
-            description: 'AI-powered content generation tool using GPT-4',
-            language: 'Python',
-            stars: 52,
-            forks: 8,
-            updatedAt: '3 days ago',
-            topics: ['ai', 'gpt-4', 'content', 'openai'],
-        },
-        {
-            id: 4,
-            name: 'task-management-app',
-            description: 'Real-time task management with drag-and-drop and collaboration',
-            language: 'JavaScript',
-            stars: 31,
-            forks: 6,
-            updatedAt: '5 days ago',
-            topics: ['react', 'socket-io', 'real-time', 'task-management'],
-        },
-    ];
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    const contributions = [
-        {
-            id: 1,
-            repo: 'facebook/react',
-            type: 'Pull Request',
-            title: 'Fix: Memory leak in useEffect cleanup',
-            status: 'merged',
-            date: '1 week ago',
-        },
-        {
-            id: 2,
-            repo: 'laravel/framework',
-            type: 'Issue',
-            title: 'Feature request: Add support for custom validation rules',
-            status: 'open',
-            date: '2 weeks ago',
-        },
-        {
-            id: 3,
-            repo: 'tailwindlabs/tailwindcss',
-            type: 'Pull Request',
-            title: 'Add new utility classes for grid layouts',
-            status: 'merged',
-            date: '1 month ago',
-        },
-        {
-            id: 4,
-            repo: 'vercel/next.js',
-            type: 'Issue',
-            title: 'Bug: Hydration error in development mode',
-            status: 'closed',
-            date: '1 month ago',
-        },
-    ];
-
-    const activity = [
-        { date: '2024-03-08', count: 5 },
-        { date: '2024-03-07', count: 8 },
-        { date: '2024-03-06', count: 3 },
-        { date: '2024-03-05', count: 12 },
-        { date: '2024-03-04', count: 7 },
-        { date: '2024-03-03', count: 0 },
-        { date: '2024-03-02', count: 0 },
-        { date: '2024-03-01', count: 6 },
-    ];
+        if (diffDays < 1) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+        if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+        return `${Math.floor(diffDays / 365)} years ago`;
+    };
 
     const getLanguageColor = (language) => {
         const colors = {
@@ -117,17 +89,12 @@ export default function GitHubSection() {
             PHP: 'bg-purple-600',
             Java: 'bg-red-600',
             Go: 'bg-cyan-600',
+            C: 'bg-gray-700',
+            'C++': 'bg-pink-600',
+            Ruby: 'bg-red-500',
+            Rust: 'bg-orange-600',
         };
         return colors[language] || 'bg-gray-600';
-    };
-
-    const getStatusColor = (status) => {
-        const colors = {
-            merged: 'success',
-            open: 'warning',
-            closed: 'secondary',
-        };
-        return colors[status] || 'secondary';
     };
 
     return (
@@ -135,7 +102,7 @@ export default function GitHubSection() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <SectionTitle
                     title="GitHub Activity"
-                    subtitle="My open source contributions and projects"
+                    subtitle={`Latest repositories from @${GITHUB_USERNAME}`}
                 />
 
                 {/* Stats Grid */}
@@ -143,162 +110,109 @@ export default function GitHubSection() {
                     <Card className="text-center">
                         <CodeBracketIcon className="h-10 w-10 mx-auto mb-3 text-primary-600" />
                         <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                            {stats.totalRepos}
+                            {loading ? '...' : stats.totalRepos}
                         </p>
                         <p className="text-gray-600 dark:text-gray-400">Repositories</p>
                     </Card>
                     <Card className="text-center">
                         <StarIcon className="h-10 w-10 mx-auto mb-3 text-yellow-500" />
                         <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                            {stats.totalStars}
+                            {loading ? '...' : stats.totalStars}
                         </p>
-                        <p className="text-gray-600 dark:text-gray-400">Stars</p>
+                        <p className="text-gray-600 dark:text-gray-400">Total Stars</p>
                     </Card>
                     <Card className="text-center">
                         <CommandLineIcon className="h-10 w-10 mx-auto mb-3 text-green-600" />
                         <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                            {stats.totalCommits}
+                            {loading ? '...' : stats.totalCommits}
                         </p>
-                        <p className="text-gray-600 dark:text-gray-400">Commits</p>
+                        <p className="text-gray-600 dark:text-gray-400">Est. Commits</p>
                     </Card>
                     <Card className="text-center">
                         <ClockIcon className="h-10 w-10 mx-auto mb-3 text-purple-600" />
                         <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                            {stats.contributionsThisYear}
+                            {loading ? '...' : repositories.length}
                         </p>
-                        <p className="text-gray-600 dark:text-gray-400">This Year</p>
+                        <p className="text-gray-600 dark:text-gray-400">Recent Repos</p>
                     </Card>
                 </div>
 
-                {/* Contribution Graph */}
-                <Card className="mb-12">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                        Recent Activity
+                {/* Repositories Section */}
+                <div className="mb-8">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                        Latest Repositories
                     </h3>
-                    <div className="flex gap-2 overflow-x-auto pb-2">
-                        {activity.map((day, index) => (
-                            <div key={index} className="flex flex-col items-center gap-1 min-w-fit">
-                                <div
-                                    className={`
-                                        w-8 h-8 rounded
-                                        ${day.count === 0 ? 'bg-gray-200 dark:bg-gray-700' :
-                                          day.count <= 3 ? 'bg-green-200 dark:bg-green-900' :
-                                          day.count <= 6 ? 'bg-green-400 dark:bg-green-700' :
-                                          day.count <= 9 ? 'bg-green-600 dark:bg-green-600' :
-                                          'bg-green-800 dark:bg-green-500'}
-                                        transition-colors hover:ring-2 hover:ring-primary-500
-                                    `}
-                                    title={`${day.count} contributions on ${day.date}`}
-                                ></div>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                    {new Date(day.date).getDate()}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </Card>
-
-                {/* Tabs */}
-                <div className="flex gap-4 mb-8 border-b border-gray-200 dark:border-gray-700">
-                    <button
-                        onClick={() => setActiveTab('repositories')}
-                        className={`
-                            px-4 py-2 font-semibold transition-colors border-b-2
-                            ${activeTab === 'repositories'
-                                ? 'text-primary-600 dark:text-primary-400 border-primary-600'
-                                : 'text-gray-600 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-white'
-                            }
-                        `}
-                    >
-                        Popular Repositories
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('contributions')}
-                        className={`
-                            px-4 py-2 font-semibold transition-colors border-b-2
-                            ${activeTab === 'contributions'
-                                ? 'text-primary-600 dark:text-primary-400 border-primary-600'
-                                : 'text-gray-600 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-white'
-                            }
-                        `}
-                    >
-                        Open Source Contributions
-                    </button>
-                </div>
-
-                {/* Repositories Tab */}
-                {activeTab === 'repositories' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {repositories.map((repo) => (
-                            <Card key={repo.id}>
-                                <div className="flex items-start justify-between mb-3">
-                                    <h4 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                        <CodeBracketIcon className="h-5 w-5" />
-                                        {repo.name}
-                                    </h4>
-                                    <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                                        <StarIcon className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                        <span className="text-sm">{repo.stars}</span>
-                                    </div>
-                                </div>
-                                
-                                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                    {repo.description}
-                                </p>
-
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {repo.topics.map((topic) => (
-                                        <Badge key={topic} color="secondary">
-                                            {topic}
-                                        </Badge>
-                                    ))}
-                                </div>
-
-                                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                                    <div className="flex items-center gap-2">
-                                        <span className={`w-3 h-3 rounded-full ${getLanguageColor(repo.language)}`}></span>
-                                        <span>{repo.language}</span>
-                                    </div>
-                                    <span>Updated {repo.updatedAt}</span>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
-                )}
-
-                {/* Contributions Tab */}
-                {activeTab === 'contributions' && (
-                    <div className="space-y-4">
-                        {contributions.map((contribution) => (
-                            <Card key={contribution.id}>
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <Badge color="secondary">{contribution.type}</Badge>
-                                            <Badge color={getStatusColor(contribution.status)}>
-                                                {contribution.status}
-                                            </Badge>
+                    
+                    {loading ? (
+                        <div className="text-center py-12">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading GitHub repositories...</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {repositories.map((repo) => (
+                                <a
+                                    key={repo.id}
+                                    href={repo.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block transition-transform hover:scale-105"
+                                >
+                                    <Card>
+                                        <div className="flex items-start justify-between mb-3">
+                                            <h4 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                                <CodeBracketIcon className="h-5 w-5" />
+                                                {repo.name}
+                                            </h4>
+                                            <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                                                <StarIcon className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                                <span className="text-sm">{repo.stars}</span>
+                                            </div>
                                         </div>
-                                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                                            {contribution.title}
-                                        </h4>
-                                        <p className="text-gray-600 dark:text-gray-400">
-                                            {contribution.repo}
+                                        
+                                        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                                            {repo.description}
                                         </p>
-                                    </div>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                                        {contribution.date}
-                                    </span>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
-                )}
+
+                                        {repo.topics.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mb-4">
+                                                {repo.topics.slice(0, 4).map((topic) => (
+                                                    <Badge key={topic} color="secondary">
+                                                        {topic}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                                            <div className="flex items-center gap-3">
+                                                {repo.language && (
+                                                    <div className="flex items-center gap-1">
+                                                        <span className={`w-3 h-3 rounded-full ${getLanguageColor(repo.language)}`}></span>
+                                                        <span>{repo.language}</span>
+                                                    </div>
+                                                )}
+                                                <span>★ {repo.forks} forks</span>
+                                            </div>
+                                            <span>Updated {repo.updatedAt}</span>
+                                        </div>
+                                    </Card>
+                                </a>
+                            ))}
+                        </div>
+                    )}
+                    
+                    {!loading && repositories.length === 0 && (
+                        <div className="text-center py-12">
+                            <p className="text-gray-600 dark:text-gray-400">No repositories found</p>
+                        </div>
+                    )}
+                </div>
 
                 {/* GitHub Profile Link */}
                 <div className="mt-12 text-center">
                     <a
-                        href="https://github.com/yourusername"
+                        href={`https://github.com/${GITHUB_USERNAME}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"

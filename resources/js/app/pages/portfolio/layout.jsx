@@ -149,7 +149,7 @@ export default function PortfolioLayout({ children }) {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                         <div className="text-center">
                             <p className="text-gray-600 dark:text-gray-400">
-                                © {new Date().getFullYear()} Developer Portfolio. Built with Laravel & React.
+                                © {new Date().getFullYear()} Mark Harvey Leduna. Built with React & Vite.
                             </p>
                         </div>
                     </div>
