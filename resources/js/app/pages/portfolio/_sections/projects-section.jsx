@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
 import SectionTitle from '../../components/section-title';
 import Card from '../../components/card';
 import Badge from '../../components/badge';
@@ -429,206 +430,263 @@ public class CourseActivity extends AppCompatActivity {
         : projects.filter(p => p.category === activeFilter);
 
     return (
-        <section id="projects" className="py-20 bg-gray-50 dark:bg-gray-900">
+        <section id="projects" className="py-20 relative overflow-hidden bg-gray-50/50 dark:bg-gray-900/50">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary-400/5 dark:bg-primary-900/20 rounded-full blur-3xl -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-400/5 dark:bg-purple-900/20 rounded-full blur-3xl -z-10"></div>
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <SectionTitle
-                    title="Featured Projects"
-                    subtitle="A showcase of my recent work and personal projects"
-                />
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                >
+                    <SectionTitle
+                        title="Featured Projects"
+                        subtitle="A showcase of my recent work and personal projects"
+                    />
+                </motion.div>
 
                 {/* Filter Tabs */}
-                <div className="flex flex-wrap justify-center gap-2 mb-12">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="flex flex-wrap justify-center gap-3 mb-12"
+                >
                     {categories.map((cat) => (
-                        <button
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             key={cat.id}
                             onClick={() => setActiveFilter(cat.id)}
                             className={`
-                                px-6 py-2 rounded-full font-medium transition-all
+                                px-6 py-2.5 rounded-full font-medium transition-colors border backdrop-blur-md
                                 ${activeFilter === cat.id
-                                    ? 'bg-primary-600 text-white shadow-lg'
-                                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    ? 'bg-primary-600 border-primary-600 text-white shadow-lg shadow-primary-500/30'
+                                    : 'bg-white/60 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                 }
                             `}
                         >
                             {cat.label}
-                        </button>
+                        </motion.button>
                     ))}
-                </div>
+                </motion.div>
 
                 {/* Projects Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredProjects.map((project, index) => (
-                        <Card
-                            key={project.id}
-                            className="cursor-pointer"
-                            style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                            {/* Project Image */}
-                            <div className="relative overflow-hidden rounded-lg mb-4 h-48 bg-gray-100 dark:bg-gray-800">
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
-                                />
-                            </div>
-
-                            {/* Project Info */}
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                {project.title}
-                            </h3>
-
-                            <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                                {project.description}
-                            </p>
-
-                            {/* Tech Stack */}
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                {project.techStack.slice(0, 3).map((tech) => (
-                                    <Badge key={tech} color="primary">
-                                        {tech}
-                                    </Badge>
-                                ))}
-                                {project.techStack.length > 3 && (
-                                    <Badge color="secondary">
-                                        +{project.techStack.length - 3}
-                                    </Badge>
-                                )}
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => setSelectedProject(project)}
-                                    className="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
-                                >
-                                    View Details
-                                </button>
-                                {project.githubUrl && (
-                                    <a
-                                        href={project.githubUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
-                                        title="View on GitHub"
+                <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <AnimatePresence mode="popLayout">
+                        {filteredProjects.map((project, index) => (
+                            <motion.div
+                                layout
+                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                                transition={{ duration: 0.4, delay: index * 0.05 }}
+                                key={project.id}
+                                className="h-full"
+                            >
+                                <motion.div whileHover={{ y: -10 }} className="h-full">
+                                    <Card
+                                        className="cursor-pointer h-full flex flex-col bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-white/10 overflow-hidden group"
                                     >
-                                        <CodeBracketIcon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
-                                    </a>
-                                )}
-                                {project.liveUrl && (
-                                    <a
-                                        href={project.liveUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
-                                        title="View Live Demo"
-                                    >
-                                        <GlobeAltIcon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
-                                    </a>
-                                )}
-                            </div>
-                        </Card>
-                    ))}
-                </div>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 to-purple-500/0 group-hover:from-primary-500/5 group-hover:to-purple-500/5 transition-colors duration-500 z-0"></div>
+                                        
+                                        {/* Project Image */}
+                                        <div className="relative overflow-hidden mb-4 h-48 bg-gray-100 dark:bg-gray-900 -mx-6 -mt-6 sm:-mx-6 sm:-mt-6">
+                                            <img
+                                                src={project.image}
+                                                alt={project.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                        </div>
+
+                                        <div className="relative z-10 flex flex-col flex-grow">
+                                            {/* Project Info */}
+                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                                                {project.title}
+                                            </h3>
+
+                                            <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-2 text-sm">
+                                                {project.description}
+                                            </p>
+
+                                            <div className="mt-auto">
+                                                {/* Tech Stack */}
+                                                <div className="flex flex-wrap gap-2 mb-6">
+                                                    {project.techStack.slice(0, 3).map((tech) => (
+                                                        <Badge key={tech} color="primary">
+                                                            {tech}
+                                                        </Badge>
+                                                    ))}
+                                                    {project.techStack.length > 3 && (
+                                                        <Badge color="secondary">
+                                                            +{project.techStack.length - 3}
+                                                        </Badge>
+                                                    )}
+                                                </div>
+
+                                                {/* Actions */}
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => setSelectedProject(project)}
+                                                        className="flex-1 px-4 py-2.5 bg-gray-900 dark:bg-gray-700 hover:bg-primary-600 dark:hover:bg-primary-600 text-white rounded-xl transition-colors font-medium text-sm"
+                                                    >
+                                                        View Details
+                                                    </button>
+                                                    {project.githubUrl && (
+                                                        <a
+                                                            href={project.githubUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="p-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors border border-gray-200 dark:border-gray-700"
+                                                            title="View on GitHub"
+                                                        >
+                                                            <CodeBracketIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                                                        </a>
+                                                    )}
+                                                    {project.liveUrl && (
+                                                        <a
+                                                            href={project.liveUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="p-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors border border-gray-200 dark:border-gray-700"
+                                                            title="View Live Demo"
+                                                        >
+                                                            <GlobeAltIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                </motion.div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
 
                 {/* Project Detail Modal */}
-                {selectedProject && (
-                    <Modal
-                        isOpen={!!selectedProject}
-                        onClose={() => setSelectedProject(null)}
-                        title={selectedProject.title}
-                    >
-                        <div className="space-y-6">
-                            {/* Project Image */}
-                            <img
-                                src={selectedProject.image}
-                                alt={selectedProject.title}
-                                className="w-full h-64 object-contain rounded-lg bg-gray-100 dark:bg-gray-800"
-                            />
+                <AnimatePresence>
+                    {selectedProject && (
+                        <Modal
+                            isOpen={!!selectedProject}
+                            onClose={() => setSelectedProject(null)}
+                            title={selectedProject.title}
+                        >
+                            <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-2 custom-scrollbar">
+                                {/* Project Image */}
+                                <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800">
+                                    <img
+                                        src={selectedProject.image}
+                                        alt={selectedProject.title}
+                                        className="w-full h-64 object-cover bg-gray-100 dark:bg-gray-900"
+                                    />
+                                </div>
 
-                            {/* Description */}
-                            <div>
-                                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
-                                    About This Project
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-400">
-                                    {selectedProject.fullDescription}
-                                </p>
-                            </div>
+                                {/* Description */}
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
+                                        About This Project
+                                    </h3>
+                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                                        {selectedProject.fullDescription}
+                                    </p>
+                                </div>
 
-                            {/* Tech Stack */}
-                            <div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                                    Technologies Used
-                                </h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {selectedProject.techStack.map((tech) => (
-                                        <Badge key={tech} color="primary">
-                                            {tech}
-                                        </Badge>
-                                    ))}
+                                {/* Tech Stack */}
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                                        Technologies Used
+                                    </h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedProject.techStack.map((tech) => (
+                                            <Badge key={tech} color="primary" className="px-3 py-1">
+                                                {tech}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Features */}
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                                        Key Features
+                                    </h3>
+                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {selectedProject.features.map((feature, idx) => (
+                                            <li key={idx} className="flex items-start bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg border border-gray-100 dark:border-gray-800">
+                                                <span className="text-primary-500 mr-3 mt-0.5">●</span>
+                                                <span className="text-gray-700 dark:text-gray-300 text-sm">
+                                                    {feature}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* Code Preview */}
+                                {selectedProject.codePreview && (
+                                    <div>
+                                        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                                            Code Snapshot
+                                        </h3>
+                                        <div className="code-preview rounded-xl border border-gray-200 dark:border-gray-700 shadow-inner">
+                                            <pre className="text-sm text-gray-300 overflow-x-auto p-4 custom-scrollbar">
+                                                <code>{selectedProject.codePreview}</code>
+                                            </pre>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Links */}
+                                <div className="flex flex-col sm:flex-row gap-4 pt-4 mt-6 border-t border-gray-100 dark:border-gray-800">
+                                    {selectedProject.githubUrl && (
+                                        <a
+                                            href={selectedProject.githubUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-900 dark:bg-gray-700 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors shadow-md"
+                                        >
+                                            <CodeBracketIcon className="h-5 w-5" />
+                                            View Source Code
+                                            <ArrowTopRightOnSquareIcon className="h-4 w-4 opacity-70" />
+                                        </a>
+                                    )}
+                                    {selectedProject.liveUrl && (
+                                        <a
+                                            href={selectedProject.liveUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-primary-600 to-purple-600 text-white rounded-xl hover:from-primary-700 hover:to-purple-700 transition-colors shadow-md shadow-primary-500/20"
+                                        >
+                                            <GlobeAltIcon className="h-5 w-5" />
+                                            Visit Live Project
+                                            <ArrowTopRightOnSquareIcon className="h-4 w-4 opacity-70" />
+                                        </a>
+                                    )}
                                 </div>
                             </div>
-
-                            {/* Features */}
-                            <div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                                    Key Features
-                                </h3>
-                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    {selectedProject.features.map((feature, idx) => (
-                                        <li key={idx} className="flex items-start">
-                                            <span className="text-primary-600 mr-2">✓</span>
-                                            <span className="text-gray-600 dark:text-gray-400">
-                                                {feature}
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            {/* Code Preview */}
-                            <div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                                    Code Preview
-                                </h3>
-                                <div className="code-preview">
-                                    <pre className="text-sm text-gray-300 overflow-x-auto">
-                                        <code>{selectedProject.codePreview}</code>
-                                    </pre>
-                                </div>
-                            </div>
-
-                            {/* Links */}
-                            <div className="flex gap-4 pt-4">
-                                {selectedProject.githubUrl && (
-                                    <a
-                                        href={selectedProject.githubUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
-                                    >
-                                        <CodeBracketIcon className="h-5 w-5" />
-                                        View on GitHub
-                                        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                                    </a>
-                                )}
-                                {selectedProject.liveUrl && (
-                                    <a
-                                        href={selectedProject.liveUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                                    >
-                                        <GlobeAltIcon className="h-5 w-5" />
-                                        View Live Demo
-                                        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                                    </a>
-                                )}
-                            </div>
-                        </div>
-                    </Modal>
-                )}
+                        </Modal>
+                    )}
+                </AnimatePresence>
             </div>
+            
+            <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                    height: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(156, 163, 175, 0.5);
+                    border-radius: 10px;
+                }
+            `}</style>
         </section>
     );
 }

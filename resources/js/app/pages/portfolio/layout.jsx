@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDarkMode } from './_redux/theme-slice';
+import CustomCursor from '../components/custom-cursor';
 import {
     Bars3Icon,
     XMarkIcon,
@@ -40,14 +41,15 @@ export default function PortfolioLayout({ children }) {
     };
 
     return (
-        <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
-            <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+        <div className={`min-h-screen ${darkMode ? 'dark' : ''} overflow-x-hidden`}>
+            <CustomCursor />
+            <div className="bg-slate-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
                 {/* Navigation */}
                 <nav
-                    className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+                    className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
                         scrolled
-                            ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
-                            : 'bg-transparent'
+                            ? 'bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 shadow-sm'
+                            : 'bg-transparent py-2'
                     }`}
                 >
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

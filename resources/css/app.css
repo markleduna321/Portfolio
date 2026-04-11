@@ -12,6 +12,20 @@
         --background: 224 71% 4%;
         --foreground: 213 31% 91%;
     }
+
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    ::selection {
+        background-color: #0ea5e9;
+        color: white;
+    }
+
+    body {
+        @apply antialiased text-gray-900 dark:text-white bg-slate-50 dark:bg-gray-950 transition-colors duration-300;
+        font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
 }
 
 @layer utilities {
@@ -49,4 +63,14 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+/* Custom Cursor Hiding on Desktop */
+@media (pointer: fine) {
+    body {
+        cursor: none;
+    }
+    a, button, input, textarea, [role="button"], select {
+        cursor: none !important;
+    }
 }

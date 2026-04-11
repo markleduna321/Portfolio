@@ -1,5 +1,6 @@
 import SectionTitle from '../../components/section-title';
 import Card from '../../components/card';
+import { motion } from 'framer-motion';
 import {
     CodeBracketIcon,
     ServerIcon,
@@ -90,52 +91,68 @@ export default function SkillsSection() {
     ];
 
     return (
-        <section id="skills" className="py-20 bg-white dark:bg-gray-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <SectionTitle
-                    title="Skills & Expertise"
-                    subtitle="Technologies and tools I work with"
-                />
+        <section id="skills" className="py-20 relative bg-white/50 dark:bg-gray-800/50 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                >
+                    <SectionTitle
+                        title="Skills & Expertise"
+                        subtitle="Technologies and tools I work with"
+                    />
+                </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {skillCategories.map((category, index) => {
                         const Icon = category.icon;
                         return (
-                            <Card
+                            <motion.div
                                 key={category.id}
-                                className="animate-fadeIn"
-                                style={{ animationDelay: `${index * 100}ms` }}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
                             >
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className={`p-3 rounded-lg bg-gray-100 dark:bg-gray-700 ${category.color}`}>
-                                        <Icon className="h-6 w-6" />
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                                        {category.title}
-                                    </h3>
-                                </div>
-
-                                <div className="space-y-4">
-                                    {category.skills.map((skill) => (
-                                        <div key={skill.name}>
-                                            <div className="flex justify-between mb-1">
-                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                    {skill.name}
-                                                </span>
-                                                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                    {skill.level}%
-                                                </span>
+                                <motion.div whileHover={{ y: -5 }}>
+                                    <Card className="h-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-xl shadow-gray-200/50 dark:shadow-black/20 group hover:border-primary-500/30 transition-colors">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className={`p-3 rounded-xl bg-gray-50 dark:bg-gray-900 group-hover:scale-110 transition-transform ${category.color}`}>
+                                                <Icon className="h-6 w-6" />
                                             </div>
-                                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                                <div
-                                                    className={`${category.color.replace('text-', 'bg-')} h-2 rounded-full transition-all duration-1000`}
-                                                    style={{ width: `${skill.level}%` }}
-                                                ></div>
-                                            </div>
+                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                                                {category.title}
+                                            </h3>
                                         </div>
-                                    ))}
-                                </div>
-                            </Card>
+
+                                        <div className="space-y-5">
+                                            {category.skills.map((skill, skillIndex) => (
+                                                <div key={skill.name}>
+                                                    <div className="flex justify-between mb-1">
+                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {skill.name}
+                                                        </span>
+                                                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            {skill.level}%
+                                                        </span>
+                                                    </div>
+                                                    <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 overflow-hidden relative">
+                                                        <motion.div
+                                                            initial={{ width: 0 }}
+                                                            whileInView={{ width: `${skill.level}%` }}
+                                                            viewport={{ once: true }}
+                                                            transition={{ duration: 1, delay: 0.2 + (skillIndex * 0.1), type: "spring", bounce: 0.2 }}
+                                                            className={`${category.color.replace('text-', 'bg-')} h-full rounded-full absolute left-0 top-0`}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </Card>
+                                </motion.div>
+                            </motion.div>
                         );
                     })}
                 </div>

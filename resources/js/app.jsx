@@ -1,5 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
+import { Analytics } from "@vercel/analytics/react"
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -13,6 +14,7 @@ root.render(
     <StrictMode>
         <Provider store={store}>
             <PortfolioPage />
+            <Analytics />
         </Provider>
     </StrictMode>
 );
