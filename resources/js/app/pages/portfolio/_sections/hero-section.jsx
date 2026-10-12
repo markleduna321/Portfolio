@@ -1,7 +1,9 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowDownIcon, ArrowDownTrayIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import Button from '../../components/button';
+import DraggableBadge from '../../components/draggable-badge';
 import { scrollToSummary } from './summary-transition';
 
 const SystemsScene = lazy(() => import('./systems-scene'));
@@ -14,7 +16,63 @@ function SceneFallback() {
     );
 }
 
+/**
+ * Tracks an element's box in document coordinates so an overlay can be mounted on <body>.
+ * The scene canvas is portalled to <body> at z-40, so anything that has to sit above it
+ * cannot live inside the hero section's own stacking context.
+ */
+function useDocumentRect(ref) {
+    const [rect, setRect] = useState(null);
+
+    useEffect(() => {
+        const node = ref.current;
+        if (!node) return undefined;
+
+        const update = () => {
+            const box = node.getBoundingClientRect();
+            setRect((previous) => {
+                const next = {
+                    left: box.left + window.scrollX,
+                    top: box.top + window.scrollY,
+                    width: box.width,
+                    height: box.height,
+                };
+                if (
+                    previous &&
+                    previous.left === next.left &&
+                    previous.top === next.top &&
+                    previous.width === next.width &&
+                    previous.height === next.height
+                ) {
+                    return previous;
+                }
+                return next;
+            });
+        };
+
+        update();
+
+        const observer = new ResizeObserver(update);
+        observer.observe(node);
+        observer.observe(document.body);
+        window.addEventListener('resize', update);
+        document.fonts?.ready.then(update).catch(() => {});
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', update);
+        };
+    }, [ref]);
+
+    return rect;
+}
+
 export default function HeroSection() {
+    const sceneRef = useRef(null);
+    const badgeLayerRef = useRef(null);
+    const sceneRect = useDocumentRect(sceneRef);
+    const [hasDraggedBadge, setHasDraggedBadge] = useState(false);
+
     const scrollToProjects = () => {
         document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -115,7 +173,7 @@ export default function HeroSection() {
                     transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
                     className="relative mx-auto w-full max-w-[620px] lg:translate-x-6"
                 >
-                    <div id="hero-scene-anchor" className="hero-scene relative mx-auto aspect-square w-full">
+                    <div id="hero-scene-anchor" ref={sceneRef} className="hero-scene relative mx-auto aspect-square w-full">
                         <div className="hero-scene-glow absolute inset-[12%] rounded-full bg-sky-300/30 blur-[90px] dark:bg-indigo-500/20" />
                         <div className="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-sky-300/30 motion-safe:animate-[spin_42s_linear_infinite] dark:border-sky-400/20" />
                         <div className="absolute left-1/2 top-1/2 h-[82%] w-[82%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-300/40 motion-safe:animate-[spin_58s_linear_infinite_reverse] dark:border-slate-700/50" />
@@ -124,22 +182,50 @@ export default function HeroSection() {
                             <SystemsScene />
                         </Suspense>
 
-                        <div className="absolute left-[4%] top-[21%] rounded-xl border border-white/70 bg-white/75 px-3 py-2 shadow-lg shadow-slate-900/5 backdrop-blur-md dark:border-white/10 dark:bg-[#0b1220]/75 sm:left-0">
-                            <span className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">
-                                <span className="h-2 w-2 rounded-full bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,0.8)]" />
-                                AUTOMATION
-                            </span>
-                        </div>
-                        <div className="absolute bottom-[19%] right-[3%] rounded-xl border border-white/70 bg-white/75 px-3 py-2 shadow-lg shadow-slate-900/5 backdrop-blur-md dark:border-white/10 dark:bg-[#0b1220]/75 sm:right-0">
-                            <span className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">
-                                <span className="h-2 w-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
-                                SYSTEMS ARCHITECTURE
-                            </span>
-                        </div>
-                        <div className="absolute bottom-[3%] left-1/2 -translate-x-1/2 text-[10px] font-semibold tracking-[0.28em] text-slate-400 dark:text-slate-500">
+                        <div className="absolute bottom-[3%] left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 text-[10px] font-semibold tracking-[0.28em] text-slate-400 dark:text-slate-500">
                             SYSTEMS IN MOTION
+                            <motion.span
+                                animate={{ opacity: hasDraggedBadge ? 0 : 1 }}
+                                transition={{ duration: 0.45 }}
+                                className="text-[9px] font-medium tracking-[0.2em] text-slate-400/80 dark:text-slate-500/80"
+                            >
+                                DRAG THE TAGS
+                            </motion.span>
                         </div>
                     </div>
+
+                    {sceneRect &&
+                        createPortal(
+                            <motion.div
+                                ref={badgeLayerRef}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.6, delay: 0.5 }}
+                                className="pointer-events-none absolute z-[45]"
+                                style={{
+                                    left: sceneRect.left,
+                                    top: sceneRect.top,
+                                    width: sceneRect.width,
+                                    height: sceneRect.height,
+                                }}
+                            >
+                                <DraggableBadge
+                                    label="AUTOMATION"
+                                    dotClassName="bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,0.8)]"
+                                    constraintsRef={badgeLayerRef}
+                                    onMove={() => setHasDraggedBadge(true)}
+                                    className="pointer-events-auto left-[4%] top-[21%] sm:left-0"
+                                />
+                                <DraggableBadge
+                                    label="SYSTEMS ARCHITECTURE"
+                                    dotClassName="bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]"
+                                    constraintsRef={badgeLayerRef}
+                                    onMove={() => setHasDraggedBadge(true)}
+                                    className="pointer-events-auto bottom-[19%] right-[3%] sm:right-0"
+                                />
+                            </motion.div>,
+                            document.body
+                        )}
                 </motion.div>
             </div>
 

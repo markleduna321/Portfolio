@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-const INTERACTIVE = 'a, button, input, textarea, select, label, [role="button"]';
+const INTERACTIVE = 'a, button, input, textarea, select, label, [role="button"], [data-draggable]';
 
 export default function CustomCursor() {
     const [isHovering, setIsHovering] = useState(false);
