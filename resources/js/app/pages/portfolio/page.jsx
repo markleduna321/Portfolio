@@ -13,7 +13,7 @@ export default function PortfolioPage() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        document.title = 'Developer Portfolio';
+        document.title = 'Mark Harvey Leduna — Solutions Architect & Full-Stack Developer';
         // If you want to fetch data from API instead of props
         // dispatch(getPortfolioDataThunk());
     }, []);

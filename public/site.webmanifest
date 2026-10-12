@@ -1,0 +1,33 @@
+{
+    "name": "Mark Harvey Leduna — Solutions Architect & Full-Stack Developer",
+    "short_name": "M. Leduna",
+    "description": "Portfolio of Mark Harvey Leduna, bridging complex engineering with strategic IT leadership to design scalable systems and build thoughtful digital experiences.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#060a13",
+    "theme_color": "#060a13",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "type": "image/svg+xml",
+            "sizes": "any"
+        },
+        {
+            "src": "/icon-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/icon-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "/icon-maskable-512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "maskable"
+        }
+    ]
+}

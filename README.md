@@ -52,6 +52,16 @@ npm install
 
 ```
 d:\Projects\Repo\
+├── public/
+│   ├── images/
+│   ├── favicon.ico              # Multi-size (16/32/48/64) "ML" monogram
+│   ├── favicon.svg              # Scalable favicon for modern browsers
+│   ├── apple-touch-icon.png     # 180x180 iOS home-screen icon
+│   ├── icon-192.png             # PWA icon
+│   ├── icon-512.png             # PWA icon
+│   ├── icon-maskable-512.png    # PWA maskable icon (full-bleed)
+│   ├── og-image.png             # 1200x630 social share preview
+│   └── site.webmanifest
 ├── resources/
 │   ├── css/
 │   │   └── app.css
@@ -114,6 +124,15 @@ d:\Projects\Repo\
 
 - Global styles: `resources/css/app.css`
 - Tailwind config: `tailwind.config.js`
+
+### Favicon & Social Preview
+
+Icons and the link-preview card live in `public/` and are wired up in `index.html`:
+
+- **Favicon** — `favicon.svg` (modern browsers) with `favicon.ico` as the fallback, plus `apple-touch-icon.png` and the PWA icons referenced by `site.webmanifest`.
+- **Social preview** — `og-image.png` (1200x630) is served through the Open Graph and Twitter `summary_large_image` tags, so sharing the link on LinkedIn, X, Facebook, Slack, Discord, or iMessage renders a full-width preview card.
+
+If you deploy to a different domain, update the absolute URLs in `index.html` (`og:url`, `og:image`, `twitter:image`, and `canonical`) — social crawlers require absolute URLs. After deploying, re-scrape the page with the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) or [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) to refresh any cached preview.
 
 ## Deployment to Vercel
 
