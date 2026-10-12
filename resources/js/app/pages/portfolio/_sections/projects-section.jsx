@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { FeaturedList, FeaturedShowcase, useMediaQuery } from './featured-showcase';
 import SectionTitle from '../../components/section-title';
 import Card from '../../components/card';
 import Badge from '../../components/badge';
@@ -14,10 +14,94 @@ import {
 
 export default function ProjectsSection() {
     const [selectedProject, setSelectedProject] = useState(null);
-    const [activeFilter, setActiveFilter] = useState('all');
+    const [showAllProjects, setShowAllProjects] = useState(false);
 
     // Mock data - will be replaced with Redux state
     const projects = [
+        {
+            id: 9,
+            title: 'ERP Platform — EmpireOneCx',
+            description: 'An enterprise resource planning platform planned and orchestrated from the ground up.',
+            fullDescription: 'Planned and orchestrated the EmpireOneCx ERP from the ground up, translating business needs into a complete system direction and delivery plan.',
+            image: '/images/projects/eo-assetmanagement.png',
+            techStack: ['Solution Architecture', 'ERP', 'System Planning', 'End-to-End Delivery'],
+            category: 'web',
+            githubUrl: null,
+            liveUrl: null,
+            caseStudy: {
+                problem: 'EmpireOneCx needed an ERP solution shaped around its business operations and goals.',
+                architecture: 'Planned the solution from the ground up and orchestrated its development. Specific implementation technologies are not listed here.',
+                result: 'Turned the ERP concept into a planned and coordinated implementation from the ground up.',
+            },
+            features: [
+                'End-to-end project orchestration',
+                'Solution planning from the ground up',
+                'ERP platform delivery',
+            ],
+        },
+        {
+            id: 10,
+            title: 'HRIS — Skybridge BPO Solutions',
+            description: 'A human resource information system with AI-integrated capabilities.',
+            fullDescription: 'Built an HRIS for Skybridge BPO Solutions using Laravel, React, and Tailwind CSS, with OpenAI integration.',
+            image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800',
+            techStack: ['Laravel', 'React', 'Tailwind CSS', 'OpenAI API'],
+            category: 'web',
+            githubUrl: null,
+            liveUrl: null,
+            caseStudy: {
+                problem: 'Skybridge BPO Solutions needed a digital HR information system with AI capabilities.',
+                architecture: 'Laravel backend paired with a React frontend and Tailwind CSS, with OpenAI integrated into the application.',
+                result: 'Delivered an HRIS that brings AI integration into the organization’s HR technology.',
+            },
+            features: [
+                'Laravel and React application',
+                'Tailwind CSS interface',
+                'OpenAI integration',
+            ],
+        },
+        {
+            id: 11,
+            title: 'YOLO Computer Vision — Event Detection',
+            description: 'Custom-trained computer vision models for detecting events in visual data.',
+            fullDescription: 'Trained custom YOLO computer vision models for event detection, applying specialized machine learning engineering to a visual recognition problem.',
+            image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800',
+            techStack: ['YOLO', 'Computer Vision', 'Custom Model Training', 'Event Detection'],
+            category: 'ai',
+            githubUrl: null,
+            liveUrl: null,
+            caseStudy: {
+                problem: 'The task required automated event detection from visual input.',
+                architecture: 'Custom-trained YOLO computer vision models form the detection component of the event recognition workflow.',
+                result: 'Built a tailored model-based approach for identifying events in visual data.',
+            },
+            features: [
+                'Custom YOLO model training',
+                'Computer vision-based event detection',
+                'Specialized machine learning engineering',
+            ],
+        },
+        {
+            id: 12,
+            title: 'Wi-Fi CSI Sensing',
+            description: 'A sensing mechanism based on Wi-Fi Channel State Information.',
+            fullDescription: 'Developed a Wi-Fi Channel State Information (CSI) sensing mechanism, exploring how changes in wireless channel measurements can be used for sensing.',
+            image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
+            techStack: ['Wi-Fi', 'Channel State Information (CSI)', 'Wireless Sensing'],
+            category: 'ai',
+            githubUrl: null,
+            liveUrl: null,
+            caseStudy: {
+                problem: 'The project explored sensing beyond conventional camera-based approaches.',
+                architecture: 'A Wi-Fi CSI sensing mechanism uses channel-state information from wireless signals as its sensing input.',
+                result: 'Developed a specialized wireless sensing approach using Wi-Fi channel information.',
+            },
+            features: [
+                'Wi-Fi Channel State Information sensing',
+                'Wireless-signal-based sensing mechanism',
+                'Specialized engineering exploration',
+            ],
+        },
         {
             id: 1,
             title: 'Asset Management System',
@@ -416,158 +500,165 @@ public class CourseActivity extends AppCompatActivity {
         },
     ];
 
-    const categories = [
-        { id: 'all', label: 'All Projects' },
-        { id: 'web', label: 'Web Apps' },
-        { id: 'mobile', label: 'Mobile' },
-        { id: 'desktop', label: 'Desktop' },
-        { id: 'ai', label: 'AI/ML' },
-        { id: 'design', label: 'Design' },
-    ];
+    const featuredProjects = projects.filter((project) => project.caseStudy).slice(0, 4);
+    const hiddenCount = projects.length - featuredProjects.length;
+    const isDesktop = useMediaQuery('(min-width: 1024px)');
+    const reduceMotion = useReducedMotion();
+    const pinned = isDesktop && !reduceMotion;
+    const toggledRef = useRef(false);
 
-    const filteredProjects = activeFilter === 'all'
-        ? projects
-        : projects.filter(p => p.category === activeFilter);
+    useEffect(() => {
+        if (!toggledRef.current) return;
+        toggledRef.current = false;
+        document.querySelector('#projects')?.scrollIntoView({ behavior: 'auto' });
+    }, [showAllProjects]);
+
+    const toggleAllProjects = () => {
+        toggledRef.current = true;
+        setShowAllProjects((shown) => !shown);
+    };
 
     return (
-        <section id="projects" className="py-20 relative overflow-hidden bg-gray-50/50 dark:bg-gray-900/50">
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary-400/5 dark:bg-primary-900/20 rounded-full blur-3xl -z-10"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-400/5 dark:bg-purple-900/20 rounded-full blur-3xl -z-10"></div>
+        <section id="projects" className="relative bg-slate-50 dark:bg-[#060a13]">
+            {!showAllProjects && pinned && (
+                <>
+                    <FeaturedShowcase
+                        projects={featuredProjects}
+                        onOpen={setSelectedProject}
+                        onShowAll={toggleAllProjects}
+                        hiddenCount={hiddenCount}
+                    />
+                    <div className="flex justify-center bg-[#060a13] pb-6 pt-10">
+                        <button
+                            type="button"
+                            onClick={toggleAllProjects}
+                            aria-expanded={false}
+                            className="group inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-cyan-300/60 hover:bg-white/[0.08]"
+                        >
+                            {`Show More Projects (${hiddenCount})`}
+                            <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
+                        </button>
+                    </div>
+                </>
+            )}
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
+            {!showAllProjects && !pinned && (
+                <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
                     <SectionTitle
                         title="Featured Projects"
-                        subtitle="A showcase of my recent work and personal projects"
+                        subtitle="Deep dives into systems architecture, full-stack delivery, and specialized engineering."
                     />
-                </motion.div>
+                    <FeaturedList
+                        projects={featuredProjects}
+                        onOpen={setSelectedProject}
+                        animate={!reduceMotion}
+                    />
+                    {hiddenCount > 0 && (
+                        <div className="mt-16 flex justify-center">
+                            <Button variant="outline" onClick={toggleAllProjects} aria-expanded={false}>
+                                {`Show More Projects (${hiddenCount})`}
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            )}
 
-                {/* Filter Tabs */}
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="flex flex-wrap justify-center gap-3 mb-12"
-                >
-                    {categories.map((cat) => (
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            key={cat.id}
-                            onClick={() => setActiveFilter(cat.id)}
-                            className={`
-                                px-6 py-2.5 rounded-full font-medium transition-colors border backdrop-blur-md
-                                ${activeFilter === cat.id
-                                    ? 'bg-primary-600 border-primary-600 text-white shadow-lg shadow-primary-500/30'
-                                    : 'bg-white/60 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                }
-                            `}
-                        >
-                            {cat.label}
-                        </motion.button>
-                    ))}
-                </motion.div>
+            {showAllProjects && (
+                <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+                    <SectionTitle
+                        title="All Projects"
+                        subtitle="Case studies alongside the wider body of work."
+                    />
 
-                {/* Projects Grid */}
-                <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <AnimatePresence mode="popLayout">
-                        {filteredProjects.map((project, index) => (
-                            <motion.div
-                                layout
-                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                                transition={{ duration: 0.4, delay: index * 0.05 }}
+                    <div id="additional-projects" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {projects.map((project, index) => (
+                            <motion.article
                                 key={project.id}
-                                className="h-full"
+                                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: Math.min(index, 11) * 0.04 }}
+                                className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 dark:border-white/[0.08] dark:bg-[#080d18] dark:hover:border-cyan-300/25"
                             >
-                                <motion.div whileHover={{ y: -10 }} className="h-full">
-                                    <Card
-                                        className="cursor-pointer h-full flex flex-col bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-white/10 overflow-hidden group"
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 to-purple-500/0 group-hover:from-primary-500/5 group-hover:to-purple-500/5 transition-colors duration-500 z-0"></div>
-                                        
-                                        {/* Project Image */}
-                                        <div className="relative overflow-hidden mb-4 h-48 bg-gray-100 dark:bg-gray-900 -mx-6 -mt-6 sm:-mx-6 sm:-mt-6">
-                                            <img
-                                                src={project.image}
-                                                alt={project.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                            />
-                                        </div>
-
-                                        <div className="relative z-10 flex flex-col flex-grow">
-                                            {/* Project Info */}
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                                {project.title}
-                                            </h3>
-
-                                            <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-2 text-sm">
-                                                {project.description}
-                                            </p>
-
-                                            <div className="mt-auto">
-                                                {/* Tech Stack */}
-                                                <div className="flex flex-wrap gap-2 mb-6">
-                                                    {project.techStack.slice(0, 3).map((tech) => (
-                                                        <Badge key={tech} color="primary">
-                                                            {tech}
-                                                        </Badge>
-                                                    ))}
-                                                    {project.techStack.length > 3 && (
-                                                        <Badge color="secondary">
-                                                            +{project.techStack.length - 3}
-                                                        </Badge>
-                                                    )}
-                                                </div>
-
-                                                {/* Actions */}
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        onClick={() => setSelectedProject(project)}
-                                                        className="flex-1 px-4 py-2.5 bg-gray-900 dark:bg-gray-700 hover:bg-primary-600 dark:hover:bg-primary-600 text-white rounded-xl transition-colors font-medium text-sm"
-                                                    >
-                                                        View Details
-                                                    </button>
-                                                    {project.githubUrl && (
-                                                        <a
-                                                            href={project.githubUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="p-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors border border-gray-200 dark:border-gray-700"
-                                                            title="View on GitHub"
-                                                        >
-                                                            <CodeBracketIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                                                        </a>
-                                                    )}
-                                                    {project.liveUrl && (
-                                                        <a
-                                                            href={project.liveUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="p-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors border border-gray-200 dark:border-gray-700"
-                                                            title="View Live Demo"
-                                                        >
-                                                            <GlobeAltIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                                                        </a>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                </motion.div>
-                            </motion.div>
+                                <div className="relative h-36 overflow-hidden bg-slate-100 dark:bg-[#0b1220]">
+                                    <img
+                                        src={project.image}
+                                        alt={project.title}
+                                        loading="lazy"
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    {project.caseStudy && (
+                                        <span className="absolute left-3 top-3 rounded-full bg-slate-950/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
+                                            Case study
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="flex flex-1 flex-col p-4">
+                                    <h3 className="text-base font-semibold leading-snug text-slate-900 dark:text-white">
+                                        {project.title}
+                                    </h3>
+                                    <p className="mt-1.5 line-clamp-2 text-sm text-slate-600 dark:text-gray-400">
+                                        {project.description}
+                                    </p>
+                                    <div className="mt-3 flex flex-wrap gap-1.5">
+                                        {project.techStack.slice(0, 3).map((tech) => (
+                                            <Badge key={tech} color="primary">
+                                                {tech}
+                                            </Badge>
+                                        ))}
+                                        {project.techStack.length > 3 && (
+                                            <Badge color="secondary">+{project.techStack.length - 3}</Badge>
+                                        )}
+                                    </div>
+                                    <div className="mt-auto flex gap-2 pt-4">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedProject(project)}
+                                            className="flex-1 rounded-xl bg-gray-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 dark:bg-gray-700 dark:hover:bg-primary-600"
+                                        >
+                                            View Details
+                                        </button>
+                                        {project.githubUrl && (
+                                            <a
+                                                href={project.githubUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="View source"
+                                                className="rounded-xl border border-gray-200 bg-gray-100 p-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                                            >
+                                                <CodeBracketIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                                            </a>
+                                        )}
+                                        {project.liveUrl && (
+                                            <a
+                                                href={project.liveUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="View Live Demo"
+                                                className="rounded-xl border border-gray-200 bg-gray-100 p-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                                            >
+                                                <GlobeAltIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </motion.article>
                         ))}
-                    </AnimatePresence>
-                </motion.div>
+                    </div>
 
+                    <div className="mt-12 flex justify-center">
+                        <Button
+                            variant="outline"
+                            onClick={toggleAllProjects}
+                            aria-expanded
+                            aria-controls="additional-projects"
+                        >
+                            Show Less
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Project Detail Modal */}
                 <AnimatePresence>
                     {selectedProject && (
@@ -586,15 +677,33 @@ public class CourseActivity extends AppCompatActivity {
                                     />
                                 </div>
 
-                                {/* Description */}
-                                <div>
-                                    <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
-                                        About This Project
-                                    </h3>
-                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                                        {selectedProject.fullDescription}
-                                    </p>
-                                </div>
+                                {selectedProject.caseStudy ? (
+                                    <div className="space-y-5">
+                                        {[
+                                            ['Problem', selectedProject.caseStudy.problem],
+                                            ['Architecture / Tech Stack', selectedProject.caseStudy.architecture],
+                                            ['Result', selectedProject.caseStudy.result],
+                                        ].map(([label, detail]) => (
+                                            <div key={label}>
+                                                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+                                                    {label}
+                                                </h3>
+                                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                                                    {detail}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white flex items-center gap-2">
+                                            About This Project
+                                        </h3>
+                                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                                            {selectedProject.fullDescription}
+                                        </p>
+                                    </div>
+                                )}
 
                                 {/* Tech Stack */}
                                 <div>
@@ -660,7 +769,7 @@ public class CourseActivity extends AppCompatActivity {
                                             href={selectedProject.liveUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-primary-600 to-purple-600 text-white rounded-xl hover:from-primary-700 hover:to-purple-700 transition-colors shadow-md shadow-primary-500/20"
+                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-950 text-white rounded-full hover:bg-slate-800 transition-colors dark:bg-white dark:text-slate-950 dark:hover:bg-cyan-50 dark:shadow-[0_10px_40px_-12px_rgba(56,189,248,0.55)]"
                                         >
                                             <GlobeAltIcon className="h-5 w-5" />
                                             Visit Live Project
@@ -674,7 +783,7 @@ public class CourseActivity extends AppCompatActivity {
                 </AnimatePresence>
             </div>
             
-            <style jsx>{`
+            <style>{`
                 .custom-scrollbar::-webkit-scrollbar {
                     width: 6px;
                     height: 6px;

@@ -1,85 +1,67 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+﻿import { useEffect, useState } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+
+const INTERACTIVE = 'a, button, input, textarea, select, label, [role="button"]';
 
 export default function CustomCursor() {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovering, setIsHovering] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
+    const [enabled, setEnabled] = useState(false);
+
+    const x = useMotionValue(-100);
+    const y = useMotionValue(-100);
+    const ringX = useSpring(x, { stiffness: 520, damping: 38, mass: 0.45 });
+    const ringY = useSpring(y, { stiffness: 520, damping: 38, mass: 0.45 });
 
     useEffect(() => {
-        const updateMousePosition = (e) => {
-            setMousePosition({ x: e.clientX, y: e.clientY });
-            if (!isVisible) setIsVisible(true);
-        };
+        const query = window.matchMedia('(pointer: fine) and (min-width: 768px)');
+        const sync = () => setEnabled(query.matches);
+        sync();
+        query.addEventListener('change', sync);
+        return () => query.removeEventListener('change', sync);
+    }, []);
 
-        const handleMouseOver = (e) => {
-            if (e.target.closest('a, button, input, textarea, [role="button"]')) {
-                setIsHovering(true);
-            } else {
-                setIsHovering(false);
-            }
-        };
-        
-        const handleMouseLeave = () => {
-            setIsVisible(false);
-        };
+    useEffect(() => {
+        if (!enabled) return undefined;
 
-        window.addEventListener('mousemove', updateMousePosition);
-        window.addEventListener('mouseover', handleMouseOver);
-        document.body.addEventListener('mouseleave', handleMouseLeave);
+        const handleMove = (e) => {
+            x.set(e.clientX);
+            y.set(e.clientY);
+            setIsVisible(true);
+        };
+        const handleOver = (e) => setIsHovering(Boolean(e.target.closest?.(INTERACTIVE)));
+        const handleLeave = () => setIsVisible(false);
 
+        window.addEventListener('pointermove', handleMove, { passive: true });
+        window.addEventListener('pointerover', handleOver, { passive: true });
+        document.documentElement.addEventListener('pointerleave', handleLeave);
         return () => {
-            window.removeEventListener('mousemove', updateMousePosition);
-            window.removeEventListener('mouseover', handleMouseOver);
-            document.body.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('pointermove', handleMove);
+            window.removeEventListener('pointerover', handleOver);
+            document.documentElement.removeEventListener('pointerleave', handleLeave);
         };
-    }, [isVisible]);
+    }, [enabled, x, y]);
 
-    // Don't render on mobile or touch devices ideally, but checking window width is a proxy
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-        return null;
-    }
-
-    const variants = {
-        default: {
-            x: mousePosition.x - 16,
-            y: mousePosition.y - 16,
-            height: 32,
-            width: 32,
-            backgroundColor: "transparent",
-            border: "2px solid rgba(139, 92, 246, 0.5)", // purple-500 tint
-            opacity: isVisible ? 1 : 0
-        },
-        hover: {
-            x: mousePosition.x - 24,
-            y: mousePosition.y - 24,
-            height: 48,
-            width: 48,
-            backgroundColor: "rgba(139, 92, 246, 0.1)",
-            border: "2px solid rgba(139, 92, 246, 1)",
-            opacity: isVisible ? 1 : 0
-        }
-    };
+    if (!enabled) return null;
 
     return (
-        <div className="hidden md:block pointer-events-none fixed inset-0 z-[9999]">
-            {/* The main outer cursor */}
+        <div className="pointer-events-none fixed inset-0 z-[9999]" aria-hidden="true">
             <motion.div
-                className="absolute top-0 left-0 rounded-full"
-                variants={variants}
-                animate={isHovering ? "hover" : "default"}
-                transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.5 }}
-            />
-            {/* The small inner dot */}
-            <motion.div
-                className="absolute top-0 left-0 w-2 h-2 bg-primary-500 dark:bg-primary-400 rounded-full shadow-[0_0_10px_rgba(139,92,246,0.8)]"
+                className="absolute left-0 top-0 rounded-full border border-cyan-500/60 dark:border-cyan-300/50"
+                style={{ x: ringX, y: ringY, translateX: '-50%', translateY: '-50%' }}
                 animate={{
-                    x: mousePosition.x - 4,
-                    y: mousePosition.y - 4,
+                    width: isHovering ? 44 : 30,
+                    height: isHovering ? 44 : 30,
                     opacity: isVisible ? 1 : 0,
-                    scale: isHovering ? 0 : 1
+                    backgroundColor: isHovering ? 'rgba(34, 211, 238, 0.08)' : 'rgba(34, 211, 238, 0)',
                 }}
-                transition={{ type: "spring", stiffness: 1000, damping: 40, mass: 0.1 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <motion.div
+                className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-cyan-500 shadow-[0_0_12px_rgba(34,211,238,0.85)] dark:bg-cyan-300"
+                style={{ x, y, translateX: '-50%', translateY: '-50%' }}
+                animate={{ opacity: isVisible ? 1 : 0, scale: isHovering ? 0 : 1 }}
+                transition={{ duration: 0.18 }}
             />
         </div>
     );

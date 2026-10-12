@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PortfolioLayout from './layout';
 import HeroSection from './_sections/hero-section';
+import ExecutiveSummarySection from './_sections/executive-summary-section';
 import ProjectsSection from './_sections/projects-section';
 import SkillsSection from './_sections/skills-section';
-import ExperienceSection from './_sections/experience-section';
 import GitHubSection from './_sections/github-section';
 import ContactSection from './_sections/contact-section';
 import { getPortfolioDataThunk } from './_redux/portfolio-thunk';
@@ -21,9 +21,9 @@ export default function PortfolioPage() {
     return (
         <PortfolioLayout>
                 <HeroSection />
+                <ExecutiveSummarySection />
                 <ProjectsSection />
                 <SkillsSection />
-                <ExperienceSection />
                 <GitHubSection />
                 <ContactSection />
             </PortfolioLayout>

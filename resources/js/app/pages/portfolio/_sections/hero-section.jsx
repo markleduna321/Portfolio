@@ -1,108 +1,159 @@
-import { ArrowDownIcon } from '@heroicons/react/24/outline';
-import Button from '../../components/button';
+import { lazy, Suspense } from 'react';
+import { ArrowDownIcon, ArrowDownTrayIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
+import Button from '../../components/button';
+import { scrollToSummary } from './summary-transition';
+
+const SystemsScene = lazy(() => import('./systems-scene'));
+
+function SceneFallback() {
+    return (
+        <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-[42%] w-[42%] animate-pulse rounded-full border border-sky-300/40 bg-gradient-to-br from-sky-300/30 to-indigo-400/10 shadow-[0_0_100px_rgba(56,189,248,0.18)] dark:border-sky-400/20" />
+        </div>
+    );
+}
 
 export default function HeroSection() {
     const scrollToProjects = () => {
         document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } }
-    };
-    const itemVariants = {
-        hidden: { y: 30, opacity: 0 },
-        visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 15 } }
-    };
-
     return (
-        <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden">
-            {/* Animated background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-500"></div>
-            
-            {/* Animated circles */}
-            <div className="absolute top-20 left-10 md:left-20 w-64 h-64 md:w-96 md:h-96 bg-primary-400 dark:bg-primary-900/60 rounded-full mix-blend-multiply dark:mix-blend-color-dodge filter blur-[100px] opacity-70 animate-blob"></div>
-            <div className="absolute top-40 right-10 md:right-20 w-64 h-64 md:w-96 md:h-96 bg-purple-400 dark:bg-purple-900/60 rounded-full mix-blend-multiply dark:mix-blend-color-dodge filter blur-[100px] opacity-70 animate-blob animation-delay-2000"></div>
-            <div className="absolute -bottom-8 left-20 md:left-40 w-64 h-64 md:w-96 md:h-96 bg-pink-400 dark:bg-pink-900/60 rounded-full mix-blend-multiply dark:mix-blend-color-dodge filter blur-[100px] opacity-70 animate-blob animation-delay-4000"></div>
+        <section
+            id="hero"
+            className="relative isolate flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-sky-50/70 transition-colors duration-500 dark:from-[#060a13] dark:via-[#060a13] dark:to-[#0a1224]"
+        >
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_48%,_var(--tw-gradient-stops))] from-sky-100/70 via-transparent to-transparent dark:from-indigo-950/40" />
+            <div className="pointer-events-none absolute -left-48 top-1/4 h-[30rem] w-[30rem] rounded-full bg-primary-200/20 blur-3xl dark:bg-primary-900/10" />
 
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center z-10 w-full">
-                <motion.div 
-                    variants={containerVariants}
+            <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-4 px-4 pb-24 pt-28 sm:px-6 md:gap-8 lg:grid-cols-2 lg:gap-2 lg:px-8 lg:pb-20 lg:pt-24">
+                <motion.div
                     initial="hidden"
                     animate="visible"
+                    variants={{
+                        hidden: {},
+                        visible: { transition: { staggerChildren: 0.12, delayChildren: 0.18 } },
+                    }}
+                    className="relative z-10 max-w-2xl py-8 text-left lg:py-12"
                 >
-                    <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight drop-shadow-sm">
-                        Hi, I'm{' '}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-purple-600 dark:from-primary-400 dark:to-purple-400 drop-shadow-md">
-                            Mark Harvey Leduna
+                    <motion.p
+                        variants={{
+                            hidden: { opacity: 0, y: 18 },
+                            visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
+                        }}
+                        className="mb-6 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.34em] text-slate-500 dark:text-slate-400"
+                    >
+                        <span className="h-px w-10 bg-gradient-to-r from-cyan-400 to-indigo-400" />
+                        Mark Harvey Leduna
+                    </motion.p>
+
+                    <motion.h1
+                        variants={{
+                            hidden: { opacity: 0, y: 22 },
+                            visible: { opacity: 1, y: 0, transition: { duration: 0.65 } },
+                        }}
+                        className="mb-6 text-5xl font-semibold leading-[1.02] tracking-[-0.05em] text-slate-950 dark:text-white sm:text-6xl lg:text-6xl xl:text-7xl"
+                    >
+                        Solutions Architect
+                        <span className="mt-2 block bg-gradient-to-r from-cyan-600 via-sky-600 to-indigo-600 bg-clip-text pb-1 text-transparent dark:from-cyan-200 dark:via-sky-300 dark:to-indigo-300">
+                            & Full-Stack Developer
                         </span>
                     </motion.h1>
-                    
-                    <motion.p variants={itemVariants} className="text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-8 font-light">
-                        Full Stack Developer & Creative Problem Solver
-                    </motion.p>
-                    
-                    <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed">
-                        I build exceptional digital experiences that combine beautiful design 
-                        with powerful functionality. Specializing in modern web technologies 
-                        and scalable solutions.
+
+                    <motion.p
+                        variants={{
+                            hidden: { opacity: 0, y: 18 },
+                            visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
+                        }}
+                        className="mb-9 max-w-xl text-lg leading-relaxed text-slate-600 dark:text-slate-300 sm:text-xl"
+                    >
+                        Bridging complex engineering with strategic IT leadership to design
+                        scalable systems and build thoughtful digital experiences.
                     </motion.p>
 
-                    <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Button onClick={scrollToProjects} className="shadow-lg shadow-primary-500/30">
-                                View My Work
-                            </Button>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Button variant="outline" onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })} className="backdrop-blur-md bg-white/30 dark:bg-white/5 border-gray-300 dark:border-gray-700">
-                                Get In Touch
-                            </Button>
-                        </motion.div>
+                    <motion.div
+                        variants={{
+                            hidden: { opacity: 0, y: 18 },
+                            visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
+                        }}
+                        className="mb-10 flex flex-col items-start gap-3 sm:flex-row"
+                    >
+                        <Button onClick={scrollToProjects} className="group">
+                            View Technical Projects
+                            <ArrowRightIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                        </Button>
+                        <a
+                            href="/resume.pdf"
+                            download="Mark-Harvey-Leduna-Resume.pdf"
+                            className="group inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-slate-300 bg-white/70 px-6 py-3 text-[15px] font-medium tracking-[-0.01em] text-slate-800 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-400 hover:bg-white dark:border-white/15 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:border-white/30 dark:hover:bg-white/[0.08]"
+                        >
+                            Download Resume
+                            <ArrowDownTrayIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                        </a>
                     </motion.div>
 
-                    {/* Tech Stack Preview */}
-                    <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-4 mb-12">
-                        {['React', 'Laravel', 'Node.js', 'TypeScript', 'Tailwind CSS', 'PostgreSQL'].map((tech) => (
-                            <motion.span
-                                key={tech}
-                                whileHover={{ scale: 1.1, y: -5 }}
-                                className="px-4 py-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-xl shadow-sm border border-white/20 dark:border-white/10 text-gray-800 dark:text-gray-200 font-medium tracking-wide"
-                            >
-                                {tech}
-                            </motion.span>
+                    <motion.div
+                        variants={{
+                            hidden: { opacity: 0 },
+                            visible: { opacity: 1, transition: { duration: 0.7 } },
+                        }}
+                        className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-[0.16em] text-slate-500"
+                    >
+                        {['Laravel', 'React', 'Python', 'AI Integration'].map((technology, index) => (
+                            <span key={technology} className="flex items-center gap-3">
+                                {index > 0 && <span className="h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600" />}
+                                {technology}
+                            </span>
                         ))}
                     </motion.div>
                 </motion.div>
 
-                {/* Scroll indicator */}
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 2, duration: 1 }}
-                    className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.94, x: 24 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative mx-auto w-full max-w-[620px] lg:translate-x-6"
                 >
-                    <ArrowDownIcon className="h-8 w-8 text-gray-400 dark:text-gray-500" />
+                    <div id="hero-scene-anchor" className="hero-scene relative mx-auto aspect-square w-full">
+                        <div className="hero-scene-glow absolute inset-[12%] rounded-full bg-sky-300/30 blur-[90px] dark:bg-indigo-500/20" />
+                        <div className="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-sky-300/30 motion-safe:animate-[spin_42s_linear_infinite] dark:border-sky-400/20" />
+                        <div className="absolute left-1/2 top-1/2 h-[82%] w-[82%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-300/40 motion-safe:animate-[spin_58s_linear_infinite_reverse] dark:border-slate-700/50" />
+
+                        <Suspense fallback={<SceneFallback />}>
+                            <SystemsScene />
+                        </Suspense>
+
+                        <div className="absolute left-[4%] top-[21%] rounded-xl border border-white/70 bg-white/75 px-3 py-2 shadow-lg shadow-slate-900/5 backdrop-blur-md dark:border-white/10 dark:bg-[#0b1220]/75 sm:left-0">
+                            <span className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">
+                                <span className="h-2 w-2 rounded-full bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,0.8)]" />
+                                AUTOMATION
+                            </span>
+                        </div>
+                        <div className="absolute bottom-[19%] right-[3%] rounded-xl border border-white/70 bg-white/75 px-3 py-2 shadow-lg shadow-slate-900/5 backdrop-blur-md dark:border-white/10 dark:bg-[#0b1220]/75 sm:right-0">
+                            <span className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">
+                                <span className="h-2 w-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
+                                SYSTEMS ARCHITECTURE
+                            </span>
+                        </div>
+                        <div className="absolute bottom-[3%] left-1/2 -translate-x-1/2 text-[10px] font-semibold tracking-[0.28em] text-slate-400 dark:text-slate-500">
+                            SYSTEMS IN MOTION
+                        </div>
+                    </div>
                 </motion.div>
             </div>
 
-            <style jsx>{`
-                @keyframes blob {
-                    0%, 100% { transform: translate(0px, 0px) scale(1); }
-                    33% { transform: translate(30px, -50px) scale(1.1); }
-                    66% { transform: translate(-20px, 20px) scale(0.9); }
-                }
-                .animate-blob {
-                    animation: blob 8s infinite;
-                }
-                .animation-delay-2000 {
-                    animation-delay: 2s;
-                }
-                .animation-delay-4000 {
-                    animation-delay: 4s;
-                }
-            `}</style>
+            <motion.button
+                type="button"
+                onClick={scrollToSummary}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.4, duration: 0.8 }}
+                aria-label="Scroll to executive summary"
+                className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 rounded-full border border-slate-300/70 bg-white/50 p-2 text-slate-500 backdrop-blur transition hover:text-slate-900 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-400 dark:hover:text-white"
+            >
+                <ArrowDownIcon className="h-5 w-5 animate-bounce" />
+            </motion.button>
         </section>
     );
 }

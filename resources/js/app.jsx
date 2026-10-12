@@ -1,4 +1,6 @@
 import './bootstrap';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
 import '../css/app.css';
 import { Analytics } from "@vercel/analytics/react"
 

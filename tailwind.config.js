@@ -13,7 +13,16 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Outfit', 'sans-serif'],
+                sans: ['"Geist Variable"', ...defaultTheme.fontFamily.sans],
+                mono: ['"Geist Mono Variable"', ...defaultTheme.fontFamily.mono],
+            },
+            keyframes: {
+                'border-spin': {
+                    to: { transform: 'translate(-50%, -50%) rotate(360deg)' },
+                },
+            },
+            animation: {
+                'border-spin': 'border-spin 6s linear infinite',
             },
             colors: {
                 primary: {
