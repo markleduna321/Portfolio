@@ -23,11 +23,11 @@ export default function ProjectsSection() {
             title: 'ERP Platform — EmpireOneCx',
             description: 'An enterprise resource planning platform planned and orchestrated from the ground up.',
             fullDescription: 'Planned and orchestrated the EmpireOneCx ERP from the ground up, translating business needs into a complete system direction and delivery plan.',
-            image: '/images/projects/eo-assetmanagement.png',
+            image: '/images/projects/empireonecx-case-study.png',
             techStack: ['Solution Architecture', 'ERP', 'System Planning', 'End-to-End Delivery'],
             category: 'web',
             githubUrl: null,
-            liveUrl: null,
+            liveUrl: 'https://empireonecx.com/',
             caseStudy: {
                 problem: 'EmpireOneCx needed an ERP solution shaped around its business operations and goals.',
                 architecture: 'Planned the solution from the ground up and orchestrated its development. Specific implementation technologies are not listed here.',
@@ -44,11 +44,11 @@ export default function ProjectsSection() {
             title: 'HRIS — Skybridge BPO Solutions',
             description: 'A human resource information system with AI-integrated capabilities.',
             fullDescription: 'Built an HRIS for Skybridge BPO Solutions using Laravel, React, and Tailwind CSS, with OpenAI integration.',
-            image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800',
+            image: '/images/projects/timesync-hris-case-study.png',
             techStack: ['Laravel', 'React', 'Tailwind CSS', 'OpenAI API'],
             category: 'web',
             githubUrl: null,
-            liveUrl: null,
+            liveUrl: 'https://skybridge.asuratechsolutions.com/login',
             caseStudy: {
                 problem: 'Skybridge BPO Solutions needed a digital HR information system with AI capabilities.',
                 architecture: 'Laravel backend paired with a React frontend and Tailwind CSS, with OpenAI integrated into the application.',
@@ -65,7 +65,7 @@ export default function ProjectsSection() {
             title: 'YOLO Computer Vision — Event Detection',
             description: 'Custom-trained computer vision models for detecting events in visual data.',
             fullDescription: 'Trained custom YOLO computer vision models for event detection, applying specialized machine learning engineering to a visual recognition problem.',
-            image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800',
+            image: '/images/projects/computer-vision-event-detection.jpg',
             techStack: ['YOLO', 'Computer Vision', 'Custom Model Training', 'Event Detection'],
             category: 'ai',
             githubUrl: null,
@@ -86,7 +86,7 @@ export default function ProjectsSection() {
             title: 'Wi-Fi CSI Sensing',
             description: 'A sensing mechanism based on Wi-Fi Channel State Information.',
             fullDescription: 'Developed a Wi-Fi Channel State Information (CSI) sensing mechanism, exploring how changes in wireless channel measurements can be used for sensing.',
-            image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
+            image: '/images/projects/wifi-csi-sensing.jpg',
             techStack: ['Wi-Fi', 'Channel State Information (CSI)', 'Wireless Sensing'],
             category: 'ai',
             githubUrl: null,
@@ -100,6 +100,90 @@ export default function ProjectsSection() {
                 'Wi-Fi Channel State Information sensing',
                 'Wireless-signal-based sensing mechanism',
                 'Specialized engineering exploration',
+            ],
+        },
+        {
+            id: 13,
+            title: 'Diskubre — Lead Generation SaaS',
+            description: 'A lead generation platform with AI integrations, interactive 3D, and payment processing.',
+            fullDescription: 'Built Diskubre, a lead generation SaaS platform powered by Python and OpenAI API integrations, with an interactive Three.js experience and payment integration.',
+            image: '/images/projects/diskubre-lead-generation.png',
+            techStack: ['Python', 'OpenAI API', 'Three.js', 'Payment Integration', 'SaaS'],
+            category: 'web',
+            githubUrl: null,
+            liveUrl: 'https://demo-asuratech.site/',
+            features: [
+                'Lead generation platform delivered as SaaS',
+                'OpenAI API integrations',
+                'Interactive Three.js experience',
+                'Payment integration',
+            ],
+        },
+        {
+            id: 14,
+            title: 'Caleho — Web Hosting Platform',
+            description: 'A web hosting SaaS platform deployed on Ubuntu VPS infrastructure.',
+            fullDescription: 'Built and deployed Caleho, a web hosting platform delivered as SaaS, using Ubuntu on VPS infrastructure with payment integration.',
+            image: '/images/projects/caleho-web-hosting.png',
+            techStack: ['Web Hosting', 'Ubuntu', 'VPS', 'Payment Integration', 'SaaS'],
+            category: 'web',
+            githubUrl: null,
+            liveUrl: 'https://www.caleho.cloud/',
+            features: [
+                'Web hosting platform delivered as SaaS',
+                'Deployed on Ubuntu',
+                'VPS infrastructure',
+                'Payment integration',
+            ],
+        },
+        {
+            id: 15,
+            title: 'asuraTECH Solutions',
+            description: 'A company website for automation and web development services.',
+            fullDescription: 'Created the asuraTECH Solutions website to showcase automation and web development services, including OpenAI API integrations.',
+            image: '/images/projects/asuratech-solutions.png',
+            techStack: ['Web Development', 'Automation', 'OpenAI API Integration'],
+            category: 'web',
+            githubUrl: null,
+            liveUrl: 'https://asuratechsolutions.com/',
+            features: [
+                'Company website for asuraTECH Solutions',
+                'Automation services',
+                'Web development services',
+                'OpenAI API integrations',
+            ],
+        },
+        {
+            id: 16,
+            title: 'GymAsura — Gym Management System',
+            description: 'A gym management system with mobile POS, member scanning, face recognition, and AI analytics.',
+            fullDescription: 'Built GymAsura, a gym management system featuring a mobile point-of-sale experience, QR and barcode scanning, face recognition, and AI-powered analytics.',
+            image: '/images/projects/gym-asura-management.png',
+            techStack: ['Gym Management', 'Mobile POS', 'QR Scanner', 'Barcode Scanner', 'Face Recognition', 'AI Analytics'],
+            category: 'web',
+            githubUrl: null,
+            liveUrl: 'https://demogym.asuratechsolutions.com/',
+            features: [
+                'Mobile point-of-sale system',
+                'QR code and barcode scanning',
+                'Face recognition',
+                'AI analytics',
+            ],
+        },
+        {
+            id: 17,
+            title: 'Asura Hotel — 3D Booking Experience',
+            description: 'A hotel booking homepage with immersive 3D storytelling.',
+            fullDescription: 'Created a hotel booking homepage for Asura Hotel, using Three.js to bring a 3D storytelling experience to the booking journey.',
+            image: '/images/projects/asura-hotel-3d-booking.png',
+            techStack: ['Three.js', '3D Storytelling', 'Hotel Booking', 'Web Development'],
+            category: 'web',
+            githubUrl: null,
+            liveUrl: 'https://hotel.asuratechsolutions.com/',
+            features: [
+                'Hotel booking homepage',
+                'Three.js 3D experience',
+                '3D storytelling',
             ],
         },
         {
@@ -579,19 +663,21 @@ public class CourseActivity extends AppCompatActivity {
                                 transition={{ duration: 0.4, delay: Math.min(index, 11) * 0.04 }}
                                 className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 dark:border-white/[0.08] dark:bg-[#080d18] dark:hover:border-cyan-300/25"
                             >
-                                <div className="relative h-36 overflow-hidden bg-slate-100 dark:bg-[#0b1220]">
-                                    <img
-                                        src={project.image}
-                                        alt={project.title}
-                                        loading="lazy"
-                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    />
-                                    {project.caseStudy && (
-                                        <span className="absolute left-3 top-3 rounded-full bg-slate-950/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
-                                            Case study
-                                        </span>
-                                    )}
-                                </div>
+                                {project.image && (
+                                    <div className="relative h-36 overflow-hidden bg-slate-100 dark:bg-[#0b1220]">
+                                        <img
+                                            src={project.image}
+                                            alt={project.title}
+                                            loading="lazy"
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        {project.caseStudy && (
+                                            <span className="absolute left-3 top-3 rounded-full bg-slate-950/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
+                                                Case study
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
                                 <div className="flex flex-1 flex-col p-4">
                                     <h3 className="text-base font-semibold leading-snug text-slate-900 dark:text-white">
                                         {project.title}
@@ -669,13 +755,15 @@ public class CourseActivity extends AppCompatActivity {
                         >
                             <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-2 custom-scrollbar">
                                 {/* Project Image */}
-                                <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800">
-                                    <img
-                                        src={selectedProject.image}
-                                        alt={selectedProject.title}
-                                        className="w-full h-64 object-cover bg-gray-100 dark:bg-gray-900"
-                                    />
-                                </div>
+                                {selectedProject.image && (
+                                    <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800">
+                                        <img
+                                            src={selectedProject.image}
+                                            alt={selectedProject.title}
+                                            className="w-full h-64 object-cover bg-gray-100 dark:bg-gray-900"
+                                        />
+                                    </div>
+                                )}
 
                                 {selectedProject.caseStudy ? (
                                     <div className="space-y-5">
