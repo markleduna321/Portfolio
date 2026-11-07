@@ -7,10 +7,106 @@ import Badge from '../../components/badge';
 import Modal from '../../components/modal';
 import Button from '../../components/button';
 import {
+    ArrowRightIcon,
     CodeBracketIcon,
     GlobeAltIcon,
     ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline';
+
+function MoreProjectsCallToAction({ count, onClick }) {
+    return (
+        <div className="flex flex-col items-center gap-4 text-center">
+            <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                Explore the full collection
+            </p>
+            <button
+                type="button"
+                onClick={onClick}
+                aria-expanded={false}
+                className="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-cyan-300 px-7 py-3.5 text-base font-semibold text-slate-950 shadow-[0_8px_30px_-8px_rgba(34,211,238,0.65)] transition-colors hover:bg-cyan-200 hover:shadow-[0_12px_36px_-6px_rgba(34,211,238,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#060a13] motion-safe:transition motion-safe:duration-300 motion-safe:hover:-translate-y-0.5"
+            >
+                {`View all ${count} projects`}
+                <ArrowRightIcon aria-hidden="true" className="h-5 w-5 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:translate-x-1" />
+            </button>
+        </div>
+    );
+}
+
+function ProjectCard({ project, index, reduceMotion, onOpen }) {
+    return (
+        <motion.article
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: Math.min(index, 11) * 0.04 }}
+            className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 dark:border-white/[0.08] dark:bg-[#080d18] dark:hover:border-cyan-300/25"
+        >
+            {project.image && (
+                <div className="relative h-36 overflow-hidden bg-slate-100 dark:bg-[#0b1220]">
+                    <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {project.caseStudy && (
+                        <span className="absolute left-3 top-3 rounded-full bg-slate-950/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
+                            Case study
+                        </span>
+                    )}
+                </div>
+            )}
+            <div className="flex flex-1 flex-col p-4">
+                <h3 className="text-base font-semibold leading-snug text-slate-900 dark:text-white">
+                    {project.title}
+                </h3>
+                <p className="mt-1.5 line-clamp-2 text-sm text-slate-600 dark:text-gray-400">
+                    {project.description}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                    {project.techStack.slice(0, 3).map((tech) => (
+                        <Badge key={tech} color="primary">{tech}</Badge>
+                    ))}
+                    {project.techStack.length > 3 && (
+                        <Badge color="secondary">+{project.techStack.length - 3}</Badge>
+                    )}
+                </div>
+                <div className="mt-auto flex gap-2 pt-4">
+                    <button
+                        type="button"
+                        onClick={() => onOpen(project)}
+                        className="flex-1 rounded-xl bg-gray-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 dark:bg-gray-700 dark:hover:bg-primary-600"
+                    >
+                        View Details
+                    </button>
+                    {project.githubUrl && (
+                        <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="View source"
+                            aria-label={`View source for ${project.title}`}
+                            className="rounded-xl border border-gray-200 bg-gray-100 p-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                        >
+                            <CodeBracketIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                        </a>
+                    )}
+                    {project.liveUrl && (
+                        <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="View Live Demo"
+                            aria-label={`View live demo for ${project.title}`}
+                            className="rounded-xl border border-gray-200 bg-gray-100 p-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                        >
+                            <GlobeAltIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                        </a>
+                    )}
+                </div>
+            </div>
+        </motion.article>
+    );
+}
 
 export default function ProjectsSection() {
     const [selectedProject, setSelectedProject] = useState(null);
@@ -585,6 +681,7 @@ public class CourseActivity extends AppCompatActivity {
     ];
 
     const featuredProjects = projects.filter((project) => project.caseStudy).slice(0, 4);
+    const previewProjects = projects.filter((project) => !featuredProjects.includes(project)).slice(0, 4);
     const hiddenCount = projects.length - featuredProjects.length;
     const isDesktop = useMediaQuery('(min-width: 1024px)');
     const reduceMotion = useReducedMotion();
@@ -612,17 +709,6 @@ public class CourseActivity extends AppCompatActivity {
                         onShowAll={toggleAllProjects}
                         hiddenCount={hiddenCount}
                     />
-                    <div className="flex justify-center bg-[#060a13] pb-6 pt-10">
-                        <button
-                            type="button"
-                            onClick={toggleAllProjects}
-                            aria-expanded={false}
-                            className="group inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-cyan-300/60 hover:bg-white/[0.08]"
-                        >
-                            {`Show More Projects (${hiddenCount})`}
-                            <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
-                        </button>
-                    </div>
                 </>
             )}
 
@@ -637,13 +723,23 @@ public class CourseActivity extends AppCompatActivity {
                         onOpen={setSelectedProject}
                         animate={!reduceMotion}
                     />
-                    {hiddenCount > 0 && (
-                        <div className="mt-16 flex justify-center">
-                            <Button variant="outline" onClick={toggleAllProjects} aria-expanded={false}>
-                                {`Show More Projects (${hiddenCount})`}
-                            </Button>
-                        </div>
-                    )}
+                </div>
+            )}
+
+            {!showAllProjects && previewProjects.length > 0 && (
+                <div className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
+                    <SectionTitle
+                        title="More Projects"
+                        subtitle="Explore more platforms, products, and systems I've built."
+                    />
+                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                        {previewProjects.map((project, index) => (
+                            <ProjectCard key={project.id} project={project} index={index} reduceMotion={reduceMotion} onOpen={setSelectedProject} />
+                        ))}
+                    </div>
+                    <div className="mt-12 flex justify-center">
+                        <MoreProjectsCallToAction count={projects.length} onClick={toggleAllProjects} />
+                    </div>
                 </div>
             )}
 
@@ -656,78 +752,7 @@ public class CourseActivity extends AppCompatActivity {
 
                     <div id="additional-projects" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {projects.map((project, index) => (
-                            <motion.article
-                                key={project.id}
-                                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4, delay: Math.min(index, 11) * 0.04 }}
-                                className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-900/5 dark:border-white/[0.08] dark:bg-[#080d18] dark:hover:border-cyan-300/25"
-                            >
-                                {project.image && (
-                                    <div className="relative h-36 overflow-hidden bg-slate-100 dark:bg-[#0b1220]">
-                                        <img
-                                            src={project.image}
-                                            alt={project.title}
-                                            loading="lazy"
-                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                        />
-                                        {project.caseStudy && (
-                                            <span className="absolute left-3 top-3 rounded-full bg-slate-950/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
-                                                Case study
-                                            </span>
-                                        )}
-                                    </div>
-                                )}
-                                <div className="flex flex-1 flex-col p-4">
-                                    <h3 className="text-base font-semibold leading-snug text-slate-900 dark:text-white">
-                                        {project.title}
-                                    </h3>
-                                    <p className="mt-1.5 line-clamp-2 text-sm text-slate-600 dark:text-gray-400">
-                                        {project.description}
-                                    </p>
-                                    <div className="mt-3 flex flex-wrap gap-1.5">
-                                        {project.techStack.slice(0, 3).map((tech) => (
-                                            <Badge key={tech} color="primary">
-                                                {tech}
-                                            </Badge>
-                                        ))}
-                                        {project.techStack.length > 3 && (
-                                            <Badge color="secondary">+{project.techStack.length - 3}</Badge>
-                                        )}
-                                    </div>
-                                    <div className="mt-auto flex gap-2 pt-4">
-                                        <button
-                                            type="button"
-                                            onClick={() => setSelectedProject(project)}
-                                            className="flex-1 rounded-xl bg-gray-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 dark:bg-gray-700 dark:hover:bg-primary-600"
-                                        >
-                                            View Details
-                                        </button>
-                                        {project.githubUrl && (
-                                            <a
-                                                href={project.githubUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                title="View source"
-                                                className="rounded-xl border border-gray-200 bg-gray-100 p-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-                                            >
-                                                <CodeBracketIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                                            </a>
-                                        )}
-                                        {project.liveUrl && (
-                                            <a
-                                                href={project.liveUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                title="View Live Demo"
-                                                className="rounded-xl border border-gray-200 bg-gray-100 p-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-                                            >
-                                                <GlobeAltIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                                            </a>
-                                        )}
-                                    </div>
-                                </div>
-                            </motion.article>
+                            <ProjectCard key={project.id} project={project} index={index} reduceMotion={reduceMotion} onOpen={setSelectedProject} />
                         ))}
                     </div>
 
@@ -753,7 +778,7 @@ public class CourseActivity extends AppCompatActivity {
                             onClose={() => setSelectedProject(null)}
                             title={selectedProject.title}
                         >
-                            <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-2 custom-scrollbar">
+                            <div className="space-y-6">
                                 {/* Project Image */}
                                 {selectedProject.image && (
                                     <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-800">

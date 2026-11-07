@@ -627,7 +627,8 @@ export function FeaturedShowcase({ projects, onOpen, onShowAll, hiddenCount }) {
                                 <button
                                     type="button"
                                     onClick={onShowAll}
-                                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-cyan-300/60 hover:text-white"
+                                    aria-expanded={false}
+                                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-cyan-300/50 bg-cyan-300/10 px-4 py-2 text-xs font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#060a13]"
                                 >
                                     <Squares2X2Icon className="h-4 w-4" />
                                     All projects
