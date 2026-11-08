@@ -203,7 +203,7 @@ export default function ProjectsSection() {
             title: 'Diskobre — Lead Generation SaaS',
             description: 'A lead generation platform with AI integrations, interactive 3D, and payment processing.',
             fullDescription: 'Built Diskobre, a lead generation SaaS platform powered by Python and OpenAI API integrations, with an interactive Three.js experience and payment integration.',
-            image: '/images/projects/diskobre-lead-generation.png',
+            image: '/images/projects/diskubre-lead-generation.png',
             techStack: ['Python', 'OpenAI API', 'Three.js', 'Payment Integration', 'SaaS'],
             category: 'web',
             githubUrl: null,
