@@ -200,14 +200,14 @@ export default function ProjectsSection() {
         },
         {
             id: 13,
-            title: 'Diskubre — Lead Generation SaaS',
+            title: 'Diskobre — Lead Generation SaaS',
             description: 'A lead generation platform with AI integrations, interactive 3D, and payment processing.',
-            fullDescription: 'Built Diskubre, a lead generation SaaS platform powered by Python and OpenAI API integrations, with an interactive Three.js experience and payment integration.',
-            image: '/images/projects/diskubre-lead-generation.png',
+            fullDescription: 'Built Diskobre, a lead generation SaaS platform powered by Python and OpenAI API integrations, with an interactive Three.js experience and payment integration.',
+            image: '/images/projects/diskobre-lead-generation.png',
             techStack: ['Python', 'OpenAI API', 'Three.js', 'Payment Integration', 'SaaS'],
             category: 'web',
             githubUrl: null,
-            liveUrl: 'https://demo-asuratech.site/',
+            liveUrl: 'https://diskobre.com/',
             features: [
                 'Lead generation platform delivered as SaaS',
                 'OpenAI API integrations',
