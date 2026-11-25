@@ -39,6 +39,7 @@ export default function ProjectsSection() {
                 'ERP platform delivery',
             ],
         },
+        /*
         {
             id: 10,
             title: 'HRIS — Skybridge BPO Solutions',
@@ -60,6 +61,7 @@ export default function ProjectsSection() {
                 'OpenAI integration',
             ],
         },
+        */
         {
             id: 11,
             title: 'YOLO Computer Vision — Event Detection',

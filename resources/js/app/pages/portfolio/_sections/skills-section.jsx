@@ -65,7 +65,7 @@ const skillCategories = [
                 skills: ['Multi-Tier Applications', 'REST APIs', 'WebSockets'],
             },
         ],
-        proof: 'Built the Skybridge BPO Solutions HRIS with Laravel and React, adding OpenAI integration to the application.',
+        // proof: 'Built the Skybridge BPO Solutions HRIS with Laravel and React, adding OpenAI integration to the application.',
     },
     {
         id: 'ai-security',
@@ -185,14 +185,16 @@ export default function SkillsSection() {
                                         ))}
                                     </div>
 
-                                    <div className="mt-8 border-t border-slate-200 pt-5 dark:border-gray-800">
-                                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-gray-500">
-                                            In practice
-                                        </p>
-                                        <p className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-gray-300">
-                                            {category.proof}
-                                        </p>
-                                    </div>
+                                    {category.proof && (
+                                        <div className="mt-8 border-t border-slate-200 pt-5 dark:border-gray-800">
+                                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-gray-500">
+                                                In practice
+                                            </p>
+                                            <p className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-gray-300">
+                                                {category.proof}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </motion.article>
                         );

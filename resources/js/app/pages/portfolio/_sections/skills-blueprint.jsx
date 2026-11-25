@@ -62,13 +62,15 @@ function ChapterText({ category, index, count, progress, active }) {
                     ))}
                 </dl>
 
-                <p className="mt-5 flex gap-3 text-sm leading-relaxed text-slate-400 [@media(max-height:760px)]:mt-3">
-                    <span className="mt-2 h-px w-5 shrink-0 bg-cyan-300/60" />
-                    <span>
-                        <span className="font-semibold text-slate-200">In practice — </span>
-                        {category.proof}
-                    </span>
-                </p>
+                {category.proof && (
+                    <p className="mt-5 flex gap-3 text-sm leading-relaxed text-slate-400 [@media(max-height:760px)]:mt-3">
+                        <span className="mt-2 h-px w-5 shrink-0 bg-cyan-300/60" />
+                        <span>
+                            <span className="font-semibold text-slate-200">In practice — </span>
+                            {category.proof}
+                        </span>
+                    </p>
+                )}
             </div>
         </motion.article>
     );
